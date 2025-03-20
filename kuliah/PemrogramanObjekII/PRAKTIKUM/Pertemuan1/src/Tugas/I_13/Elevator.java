@@ -1,8 +1,8 @@
-package Program.I_16;
+package Tugas.I_13;
 
 public class Elevator {
     public boolean doorOpen = false;
-    public int currentFloor = 1;
+    private int floor = 1;
     public final int TOP_FLOOR = 5;
     public final int BOTTOM_FLOOR = 1;
 
@@ -20,19 +20,19 @@ public class Elevator {
 
     public void goUp() {
         System.out.println("Going up one floor.");
-        currentFloor++;
-        System.out.println("Floor: " + currentFloor);
+        floor++;
+        System.out.println("Floor: " + floor);
     }
 
     public void goDown() {
         System.out.println("Going down one floor.");
-        currentFloor--;
-        System.out.println("Floor: " + currentFloor);
+        floor--;
+        System.out.println("Floor: " + floor);
     }
 
     public void setFloor(int desiredFloor) {
-        while (currentFloor != desiredFloor) {
-            if (currentFloor < desiredFloor) {
+        while (floor != desiredFloor) {
+            if (floor < desiredFloor) {
                 goUp();
             } else {
                 goDown();
@@ -41,7 +41,7 @@ public class Elevator {
     }
 
     public int getFloor() {
-        return currentFloor;
+        return floor;
     }
 
     public boolean checkDoorStatus() {
