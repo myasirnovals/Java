@@ -1,0 +1,20 @@
+package Program.VIII_3;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class GreetUser2 {
+    public static void main(String[] args) {
+        try {
+            System.out.println("Hi, what's your name?");
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String name = br.readLine();
+
+            System.out.println("Nice to meet you, " + name + "! :)");
+        } catch (IOException e) {
+            System.out.println("Terjadi kesalahan saat membaca input: " + e.getMessage());
+        }
+    }
+}
