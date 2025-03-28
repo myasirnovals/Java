@@ -17,12 +17,10 @@ public class UsingExceptions {
         } catch (Exception exception) {
             System.err.println("Exception handled in method throwException");
             throw exception;
-
         } finally {
             System.err.println("Finally executed in throwException");
         }
     }
-
     public static void doesNotThrowException() {
         try {
             System.out.println("Method doesNotThrowException");
@@ -31,9 +29,6 @@ public class UsingExceptions {
         } finally {
             System.err.println("Finally executed in doesNotThrowException");
         }
-
         System.out.println("End of method doesNotThrowException");
     }
 }
-
-

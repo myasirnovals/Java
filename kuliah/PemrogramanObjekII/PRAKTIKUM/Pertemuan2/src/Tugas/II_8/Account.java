@@ -36,8 +36,12 @@ public class Account {
     public void debit(int amt) {
         int tempBalance = currentBalance - amt;
         if (tempBalance < 0) {
-            int i = 1 / 0;
-            System.out.println(i);
+            try {
+                int i = 1 / 0;
+                System.out.println(i);
+            } catch (ArithmeticException e) {
+                System.out.println("Debit amount exceeded account balance");
+            }
         }
         currentBalance = tempBalance;
     }
