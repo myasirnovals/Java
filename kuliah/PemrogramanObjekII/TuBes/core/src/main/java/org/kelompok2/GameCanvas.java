@@ -11,6 +11,7 @@ import java.util.Iterator;
 
 public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private boolean running = true;
+    private int score = 0; // Skor pemain
 
     // Posisi dan ukuran pemain
     private int playerX = 375; // Posisi horizontal pemain
@@ -99,7 +100,12 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
                     // Tabrakan terdeteksi, hapus peluru dan musuh
                     bulletIterator.remove();
                     enemyIterator.remove();
-                    break; // keluar dari loop musuh setelah tabrakan
+
+                    // Tambah point ke skor
+                    score += 10; // Tambah skor
+
+                    // keluar dari loop musuh setelah tabrakan
+                    break;
                 }
             }
         }
@@ -140,6 +146,11 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         for (Enemy enemy : enemies) {
             g.fillRect(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
         }
+
+        // Gambar skor
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.drawString("Score: " + score, 10, 20); // Gambar skor di pojok kiri atas
     }
 
     // Metode KeyListener
