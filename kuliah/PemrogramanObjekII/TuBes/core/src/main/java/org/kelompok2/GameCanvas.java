@@ -1,7 +1,7 @@
 package org.kelompok2;
 
 import javax.imageio.ImageIO;
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -12,6 +12,7 @@ import java.util.Iterator;
 public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private boolean running = true;
     private int score = 0; // Skor pemain
+    private int lives = 3; // Jumlah nyawa pemain
 
     // Posisi dan ukuran pemain
     private int playerX = 375; // Posisi horizontal pemain
@@ -80,9 +81,18 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             Enemy enemy = enemyIterator.next();
             enemy.move();
 
-            // Hapus musuh jika keluar dari layar
+            // kurangi nyawa jika musuh mencapai bagian bawah layar
             if (enemy.getY() > getHeight()) {
-                enemyIterator.remove();
+                lives--; // kurangi nyawa
+                enemyIterator.remove(); // hapus musuh yang keluar dari layar
+                continue; // lanjutkan ke musuh berikutnya
+            }
+
+            // Deteksi tabrakan antara pemain dan musuh
+            if (enemy.getBounds().intersects(getPlayerBounds())) {
+                lives--; // kurangi nyawa
+                enemyIterator.remove(); // hapus musuh yang bertabrakan
+                continue; // lanjutkan ke musuh berikutnya
             }
         }
 
@@ -116,6 +126,11 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             int enemyX = (int) (Math.random() * (getWidth() - 50)); // Posisi acak
             enemies.add(new Enemy(enemyX, 0)); // Tambahkan musuh baru di atas layar
             enemySpawnTimer = 0;
+        }
+
+        // Periksa apakah pemain kehabisan nyawa
+        if (lives <= 0) {
+            gameOver(); // Tampilkan pesan game over
         }
     }
 
@@ -151,6 +166,9 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("Score: " + score, 10, 20); // Gambar skor di pojok kiri atas
+
+        // Gambar nyawa
+        g.drawString("Lives: " + lives, 10, 50); // Gambar nyawa di bawah skor
     }
 
     // Metode KeyListener
@@ -180,6 +198,16 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
         // Tidak digunakan untuk sekarang
+    }
+
+    private Rectangle getPlayerBounds() {
+        return new Rectangle(playerX, playerY, 50, 50); // Ukuran pemain
+    }
+
+    private void gameOver() {
+        running = false; // Hentikan game loop
+        JOptionPane.showMessageDialog(this, "Game Over! Your score: " + score, "Game Over", JOptionPane.INFORMATION_MESSAGE);
+        System.exit(0); // Keluar dari aplikasi
     }
 
     // kelas peluru
@@ -242,6 +270,10 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
 
         public int getHeight() {
             return height;
+        }
+
+        public Rectangle getBounds() {
+            return new Rectangle(x, y, width, height); // Ukuran musuh
         }
     }
 }
