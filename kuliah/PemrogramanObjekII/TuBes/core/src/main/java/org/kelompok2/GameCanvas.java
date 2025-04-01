@@ -32,6 +32,10 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private ArrayList<Enemy> enemies = new ArrayList<>(); // daftar musuh
     private int enemySpawnTimer = 0; // timer untuk spawn musuh
 
+    // power-up
+    private ArrayList<PowerUp> powerUps = new ArrayList<>(); // daftar power-up
+    private int powerUpSpawnTimer = 0; // timer untuk spawn power-up
+
     public GameCanvas() {
         // Mulai game loop di thread baru
         Thread gameThread = new Thread(this);
@@ -122,6 +126,33 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             }
         }
 
+        // spawn power-up setiap 300 frame (atau 5 detik pada 60 FPS)
+        powerUpSpawnTimer++;
+        if (powerUpSpawnTimer >= 300) {
+            int powerUpX = (int) (Math.random() * (getWidth() - 30)); // Posisi acak
+            powerUps.add(new PowerUp(powerUpX, 0)); // Tambahkan power-up baru di atas layar
+            powerUpSpawnTimer = 0;
+        }
+
+        // Update posisi power-up
+        Iterator<PowerUp> powerUpIterator = powerUps.iterator();
+        while (powerUpIterator.hasNext()) {
+            PowerUp powerUp = powerUpIterator.next();
+            powerUp.move();
+
+            // hapus power-up jika keluar dari layar
+            if (!powerUp.isVisible()) {
+                powerUpIterator.remove();
+                continue;
+            }
+
+            // Deteksi tabrakan antara pemain dan power-up
+            if (powerUp.getBounds().intersects(getPlayerBounds())) {
+                lives++; // tambah nyawa
+                powerUpIterator.remove(); // hapus power-up yang diambil
+            }
+        }
+
         // Spawn musuh baru setiap 100 frame
         enemySpawnTimer++;
         if (enemySpawnTimer >= 100) {
@@ -181,6 +212,12 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         String conqueredAreaText = "Conquered Area: " + conqueredArea + "/" + maxConqueredArea;
         int textWidth = g.getFontMetrics().stringWidth(conqueredAreaText); // Hitung lebar teks
         g.drawString(conqueredAreaText, getWidth() - textWidth - 10, 20); // Gambar teks di pojok kanan atas
+
+        // Gambar power-up
+        g.setColor(Color.YELLOW); // Gambar power-up berwarna kuning
+        for (PowerUp powerUp : powerUps) {
+            g.fillOval(powerUp.getX(), powerUp.getY(), powerUp.getWidth(), powerUp.getHeight());
+        }
     }
 
     // Metode KeyListener
@@ -286,6 +323,54 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
 
         public Rectangle getBounds() {
             return new Rectangle(x, y, width, height); // Ukuran musuh
+        }
+    }
+
+    // kelas power-up
+    private static class PowerUp {
+        private int x, y;
+        private final int width = 30, height = 30; // Ukuran power-up
+        private final int speed = 3; // Kecepatan power-up
+        private boolean visible = true;
+
+        public PowerUp(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public void move() {
+            y += speed; // Gerakkan power-up ke bawah
+            if (y > 600) { // Hilangkan jika keluar layar
+                visible = false;
+            }
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public boolean isVisible() {
+            return visible;
+        }
+
+        public void setVisible(boolean visible) {
+            this.visible = visible;
+        }
+
+        public Rectangle getBounds() {
+            return new Rectangle(x, y, width, height);
         }
     }
 }
