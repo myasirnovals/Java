@@ -24,6 +24,10 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private ArrayList<Bullet> bullets = new ArrayList<>(); // daftar peluru
     private final int bulletSpeed = 15; // kecepatan peluru
 
+    // musuh
+    private ArrayList<Enemy> enemies = new ArrayList<>(); // daftar musuh
+    private int enemySpawnTimer = 0; // timer untuk spawn musuh
+
     public GameCanvas() {
         // Mulai game loop di thread baru
         Thread gameThread = new Thread(this);
@@ -58,15 +62,54 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
 
     private void updateGame() {
         // Update posisi peluru
-        Iterator<Bullet> iterator = bullets.iterator();
-        while (iterator.hasNext()) {
-            Bullet bullet = iterator.next();
+        Iterator<Bullet> bulletIterator = bullets.iterator();
+        while (bulletIterator.hasNext()) {
+            Bullet bullet = bulletIterator.next();
             bullet.move();
 
             // Hapus peluru jika keluar dari layar
             if (bullet.getY() < 0) {
-                iterator.remove();
+                bulletIterator.remove();
             }
+        }
+
+        // Update posisi musuh
+        Iterator<Enemy> enemyIterator = enemies.iterator();
+        while (enemyIterator.hasNext()) {
+            Enemy enemy = enemyIterator.next();
+            enemy.move();
+
+            // Hapus musuh jika keluar dari layar
+            if (enemy.getY() > getHeight()) {
+                enemyIterator.remove();
+            }
+        }
+
+        // Deteksi tabrakan antara peluru dan musuh
+        bulletIterator = bullets.iterator(); // reset iterator untuk peluru
+        while (bulletIterator.hasNext()) {
+            Bullet bullet = bulletIterator.next();
+            enemyIterator = enemies.iterator(); // reset iterator untuk musuh
+            while (enemyIterator.hasNext()) {
+                Enemy enemy = enemyIterator.next();
+                if (bullet.getX() < enemy.getX() + enemy.getWidth() &&
+                    bullet.getX() + bullet.getWidth() > enemy.getX() &&
+                    bullet.getY() < enemy.getY() + enemy.getHeight() &&
+                    bullet.getY() + bullet.getHeight() > enemy.getY()) {
+                    // Tabrakan terdeteksi, hapus peluru dan musuh
+                    bulletIterator.remove();
+                    enemyIterator.remove();
+                    break; // keluar dari loop musuh setelah tabrakan
+                }
+            }
+        }
+
+        // Spawn musuh baru setiap 100 frame
+        enemySpawnTimer++;
+        if (enemySpawnTimer >= 100) {
+            int enemyX = (int) (Math.random() * (getWidth() - 50)); // Posisi acak
+            enemies.add(new Enemy(enemyX, 0)); // Tambahkan musuh baru di atas layar
+            enemySpawnTimer = 0;
         }
     }
 
@@ -90,6 +133,12 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         g.setColor(Color.RED); // Gambar peluru berwarna merah
         for (Bullet bullet : bullets) {
             g.fillRect(bullet.getX(), bullet.getY(), bullet.getWidth(), bullet.getHeight());
+        }
+
+        // Gambar musuh
+        g.setColor(Color.GREEN); // Gambar musuh berwarna hijau
+        for (Enemy enemy : enemies) {
+            g.fillRect(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
         }
     }
 
@@ -134,6 +183,38 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
 
         public void move() {
             y -= 15; // Gerakkan peluru ke atas
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+    }
+
+    // kelas musuh
+    private static class Enemy {
+        private int x, y;
+        private final int width = 50, height = 50; // Ukuran musuh
+        private final int speed = 5; // Kecepatan musuh
+
+        public Enemy(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public void move() {
+            y += speed; // Gerakkan musuh ke bawah
         }
 
         public int getX() {
