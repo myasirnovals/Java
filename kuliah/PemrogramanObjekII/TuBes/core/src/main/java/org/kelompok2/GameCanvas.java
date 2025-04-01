@@ -13,6 +13,8 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private boolean running = true;
     private int score = 0; // Skor pemain
     private int lives = 3; // Jumlah nyawa pemain
+    private int conqueredArea = 0; // Area yang dikuasai musuh
+    private final int maxConqueredArea = 100; // Batas area yang dikuasai musuh
 
     // Posisi dan ukuran pemain
     private int playerX = 375; // Posisi horizontal pemain
@@ -81,9 +83,9 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             Enemy enemy = enemyIterator.next();
             enemy.move();
 
-            // kurangi nyawa jika musuh mencapai bagian bawah layar
+            // tambahkan daerah yang dikuasai jika musuh mencapai area bawah layar
             if (enemy.getY() > getHeight()) {
-                lives--; // kurangi nyawa
+                conqueredArea++; // Tambah area yang dikuasai
                 enemyIterator.remove(); // hapus musuh yang keluar dari layar
                 continue; // lanjutkan ke musuh berikutnya
             }
@@ -128,6 +130,11 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             enemySpawnTimer = 0;
         }
 
+        // Periksa apakah musuh telah menguasai area terlalu banyak
+        if (conqueredArea >= maxConqueredArea) {
+            gameOver(); // Tampilkan pesan game over
+        }
+
         // Periksa apakah pemain kehabisan nyawa
         if (lives <= 0) {
             gameOver(); // Tampilkan pesan game over
@@ -168,7 +175,12 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         g.drawString("Score: " + score, 10, 20); // Gambar skor di pojok kiri atas
 
         // Gambar nyawa
-        g.drawString("Lives: " + lives, 10, 50); // Gambar nyawa di bawah skor
+        g.drawString("Lives: " + lives, 10, getHeight() - 10); // Gambar nyawa di pojok kiri bawah
+
+        // Gambar area yang dikuasai
+        String conqueredAreaText = "Conquered Area: " + conqueredArea + "/" + maxConqueredArea;
+        int textWidth = g.getFontMetrics().stringWidth(conqueredAreaText); // Hitung lebar teks
+        g.drawString(conqueredAreaText, getWidth() - textWidth - 10, 20); // Gambar teks di pojok kanan atas
     }
 
     // Metode KeyListener
