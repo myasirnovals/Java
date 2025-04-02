@@ -1,5 +1,7 @@
 package org.kelompok2;
 
+import java.awt.*;
+
 public class Bullet {
     private int x, y;
     private final int width = 5, height = 10;
@@ -27,5 +29,9 @@ public class Bullet {
 
     public int getHeight() {
         return height;
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, width, height);
     }
 }

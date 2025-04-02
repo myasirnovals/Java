@@ -141,7 +141,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         // Deteksi tabrakan antara peluru dan musuh
         for (Bullet bullet : bullets) {
             for (Enemy enemy : enemies) {
-                if (bullet.getX() < enemy.getX() + enemy.getWidth() && bullet.getX() + bullet.getWidth() > enemy.getX() && bullet.getY() < enemy.getY() + enemy.getHeight() && bullet.getY() + bullet.getHeight() > enemy.getY()) {
+                if (bullet.getBounds().intersects(enemy.getBounds())) {
                     // Tabrakan terdeteksi, hapus peluru dan musuh
                     bullets.remove(bullet);
                     enemies.remove(enemy);
