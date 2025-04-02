@@ -6,8 +6,10 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameCanvas extends JPanel implements Runnable, KeyListener {
@@ -21,6 +23,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private int shieldDuration = 0; // Durasi perisai aktif
     private boolean laserActive = false; // Status laser
     private int laserDuration = 0; // Durasi laser aktif
+    private int highScore = 0; // Skor tertinggi
 
     // Posisi dan ukuran pemain
     private int playerX = 375; // Posisi horizontal pemain
@@ -47,6 +50,9 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private int powerUpSpawnTimer = 0; // timer untuk spawn power-up
 
     public GameCanvas() {
+        // Muat skor tertinggi dari file
+        loadHighScore();
+
         // Mulai game loop di thread baru
         Thread gameThread = new Thread(this);
         gameThread.start();
@@ -95,14 +101,40 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             int speed = 5; // kecepatan musuh
 
             // pilih pola gerakan acak
-            String[] pattern = {"zigzag", "circle", "random"};
+            String[] pattern = {"zigzag", "circle", "random", "default"};
             String movementPattern = pattern[(int) (Math.random() * pattern.length)];
 
+            // log spawn musuh
             System.out.println("Spawn enemy at (" + x + ", " + y + ") with pattern: " + movementPattern);
 
             // tambahkan musuh ke daftar
             enemies.add(new Enemy(x, y, width, height, speed, movementPattern));
             enemySpawnTimer = 0; // reset timer spawn musuh
+        }
+    }
+
+    private void loadHighScore() {
+        try {
+            File file = new File("highscore.txt");
+            if (file.exists()) {
+                Scanner scanner = new Scanner(file);
+                if (scanner.hasNextInt()) {
+                    highScore = scanner.nextInt();
+                }
+                scanner.close();
+            }
+        } catch (Exception e) {
+            System.err.println("Gagal memuat skor tertinggi: " + e.getMessage());
+        }
+    }
+
+    private void saveHighScore() {
+        try {
+            FileWriter writer = new FileWriter("highscore.txt");
+            writer.write(String.valueOf(highScore));
+            writer.close();
+        } catch (Exception e) {
+            System.err.println("Gagal menyimpan skor tertinggi: " + e.getMessage());
         }
     }
 
@@ -315,6 +347,9 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             g.setColor(Color.RED); // Gambar laser berwarna merah
             g.fillRect(playerX + 20, 0, 5, playerY); // Gambar laser dari pemain ke atas
         }
+
+        // Gambar skor tertinggi
+        g.drawString("High Score: " + highScore, getWidth() / 2 - 60, 40); // Gambar skor tertinggi di tengah atas
     }
 
     // Metode KeyListener
@@ -352,6 +387,12 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
 
     private void gameOver() {
         running = false; // Hentikan game loop
+
+        if (score > highScore) {
+            highScore = score; // Simpan skor tertinggi
+            saveHighScore(); // Simpan skor tertinggi ke file
+        }
+
         JOptionPane.showMessageDialog(this, "Game Over! Your score: " + score, "Game Over", JOptionPane.INFORMATION_MESSAGE);
         System.exit(0); // Keluar dari aplikasi
     }
