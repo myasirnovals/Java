@@ -8,6 +8,7 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private boolean running = true;
@@ -15,6 +16,11 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private int lives = 3; // Jumlah nyawa pemain
     private int conqueredArea = 0; // Area yang dikuasai musuh
     private final int maxConqueredArea = 100; // Batas area yang dikuasai musuh
+    private int level = 1; // Level permainan
+    private boolean shieldActive = false; // Status perisai
+    private int shieldDuration = 0; // Durasi perisai aktif
+    private boolean laserActive = false; // Status laser
+    private int laserDuration = 0; // Durasi laser aktif
 
     // Posisi dan ukuran pemain
     private int playerX = 375; // Posisi horizontal pemain
@@ -25,15 +31,15 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private Image playerSprite;
 
     // peluru
-    private ArrayList<Bullet> bullets = new ArrayList<>(); // daftar peluru
+    private CopyOnWriteArrayList<Bullet> bullets = new CopyOnWriteArrayList<>(); // daftar peluru
     private final int bulletSpeed = 15; // kecepatan peluru
 
     // musuh
-    private ArrayList<Enemy> enemies = new ArrayList<>(); // daftar musuh
+    private CopyOnWriteArrayList<Enemy> enemies = new CopyOnWriteArrayList<>(); // daftar musuh
     private int enemySpawnTimer = 0; // timer untuk spawn musuh
 
     // power-up
-    private ArrayList<PowerUp> powerUps = new ArrayList<>(); // daftar power-up
+    private CopyOnWriteArrayList<PowerUp> powerUps = new CopyOnWriteArrayList<>(); // daftar power-up
     private int powerUpSpawnTimer = 0; // timer untuk spawn power-up
 
     public GameCanvas() {
@@ -70,52 +76,42 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
 
     private void updateGame() {
         // Update posisi peluru
-        Iterator<Bullet> bulletIterator = bullets.iterator();
-        while (bulletIterator.hasNext()) {
-            Bullet bullet = bulletIterator.next();
+        for (Bullet bullet : bullets) {
             bullet.move();
-
-            // Hapus peluru jika keluar dari layar
             if (bullet.getY() < 0) {
-                bulletIterator.remove();
+                bullets.remove(bullet); // Hapus peluru yang keluar dari layar
             }
         }
 
         // Update posisi musuh
-        Iterator<Enemy> enemyIterator = enemies.iterator();
-        while (enemyIterator.hasNext()) {
-            Enemy enemy = enemyIterator.next();
+        for (Enemy enemy: enemies) {
             enemy.move();
 
-            // tambahkan daerah yang dikuasai jika musuh mencapai area bawah layar
+            // tambahkan daerah yang dikuasai jika musuh mencapai area bawah
             if (enemy.getY() > getHeight()) {
-                conqueredArea++; // Tambah area yang dikuasai
-                enemyIterator.remove(); // hapus musuh yang keluar dari layar
-                continue; // lanjutkan ke musuh berikutnya
+                conqueredArea ++; // Tambah area yang dikuasai
+                enemies.remove(enemy); // Hapus musuh yang keluar dari layar
+                continue; // lanjutkan ke iterasi berikutnya
             }
 
-            // Deteksi tabrakan antara pemain dan musuh
+            // deteksi tabrakan antara musuh dan pemain
             if (enemy.getBounds().intersects(getPlayerBounds())) {
-                lives--; // kurangi nyawa
-                enemyIterator.remove(); // hapus musuh yang bertabrakan
-                continue; // lanjutkan ke musuh berikutnya
+                if (!shieldActive) { // kurangi nyawa hanya jika shield tidak aktif
+                    lives--; // Kurangi nyawa pemain
+                }
+
+                enemies.remove(enemy); // Hapus musuh yang bertabrakan dengan pemain
             }
         }
 
         // Deteksi tabrakan antara peluru dan musuh
-        bulletIterator = bullets.iterator(); // reset iterator untuk peluru
-        while (bulletIterator.hasNext()) {
-            Bullet bullet = bulletIterator.next();
-            enemyIterator = enemies.iterator(); // reset iterator untuk musuh
-            while (enemyIterator.hasNext()) {
-                Enemy enemy = enemyIterator.next();
-                if (bullet.getX() < enemy.getX() + enemy.getWidth() &&
-                    bullet.getX() + bullet.getWidth() > enemy.getX() &&
-                    bullet.getY() < enemy.getY() + enemy.getHeight() &&
-                    bullet.getY() + bullet.getHeight() > enemy.getY()) {
+        for (Bullet bullet : bullets) {
+            for (Enemy enemy : enemies) {
+                if (bullet.getX() < enemy.getX() + enemy.getWidth() && bullet.getX() + bullet.getWidth() > enemy.getX() &&
+                    bullet.getY() < enemy.getY() + enemy.getHeight() && bullet.getY() + bullet.getHeight() > enemy.getY()) {
                     // Tabrakan terdeteksi, hapus peluru dan musuh
-                    bulletIterator.remove();
-                    enemyIterator.remove();
+                    bullets.remove(bullet);
+                    enemies.remove(enemy);
 
                     // Tambah point ke skor
                     score += 10; // Tambah skor
@@ -126,30 +122,51 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             }
         }
 
-        // spawn power-up setiap 300 frame (atau 5 detik pada 60 FPS)
-        powerUpSpawnTimer++;
-        if (powerUpSpawnTimer >= 300) {
-            int powerUpX = (int) (Math.random() * (getWidth() - 30)); // Posisi acak
-            powerUps.add(new PowerUp(powerUpX, 0)); // Tambahkan power-up baru di atas layar
-            powerUpSpawnTimer = 0;
+        // Update status power-up laser
+        if (laserActive) {
+            for (Enemy enemy : enemies) {
+                if (enemy.getX() >= playerX && enemy.getX() <= playerX + 50) {
+                    enemies.remove(enemy); // Hapus musuh yang terkena laser
+                    score += 20; // Tambah skor
+                }
+            }
+        }
+
+        // Update status laser
+        if (laserActive) {
+            laserDuration--;
+            if (laserDuration <= 0) {
+                laserActive = false;
+            }
         }
 
         // Update posisi power-up
-        Iterator<PowerUp> powerUpIterator = powerUps.iterator();
-        while (powerUpIterator.hasNext()) {
-            PowerUp powerUp = powerUpIterator.next();
+        for (PowerUp powerUp : powerUps) {
             powerUp.move();
 
             // hapus power-up jika keluar dari layar
             if (!powerUp.isVisible()) {
-                powerUpIterator.remove();
+                powerUps.remove(powerUp);
                 continue;
             }
 
             // Deteksi tabrakan antara pemain dan power-up
             if (powerUp.getBounds().intersects(getPlayerBounds())) {
-                lives++; // tambah nyawa
-                powerUpIterator.remove(); // hapus power-up yang diambil
+                switch (powerUp.getType()) {
+                    case "life":
+                        lives++; // Tambah nyawa
+                        System.out.println("Life Power-Up Collected!");
+                        break;
+                    case "shield":
+                        activateShield(); // Aktifkan perisai
+                        System.out.println("Shield Power-Up Collected!");
+                        break;
+                    case "laser":
+                        activateLaser(); // Aktifkan laser
+                        System.out.println("Laser Power-Up Collected!");
+                        break;
+                }
+                powerUps.remove(powerUp); // Hapus power-up setelah diambil
             }
         }
 
@@ -161,6 +178,27 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             enemySpawnTimer = 0;
         }
 
+        // Spawn power-up setiap 300 frame (atau 5 detik pada 60 FPS)
+        powerUpSpawnTimer++;
+        if (powerUpSpawnTimer >= 300) {
+            int powerUpX = (int) (Math.random() * (getWidth() - 30)); // Posisi acak
+            String[] powerUpTypes = {"life", "shield", "laser"}; // Tipe power-up
+            String randomType = powerUpTypes[(int) (Math.random() * powerUpTypes.length)]; // pilih tipe acak
+            powerUps.add(new PowerUp(powerUpX, 0, randomType)); // Tambahkan power-up baru di atas layar
+            powerUpSpawnTimer = 0; // Reset timer spawn power-up
+        }
+
+        // tingkatkan level setiap 100 poin
+        if (score >= level * 100) {
+            level++;
+            System.out.println("Level Up! Level saat ini: " + level);
+
+            // Tingkatkan kecepatan musuh
+            for (Enemy enemy : enemies) {
+                enemy.increaseSpeed(1); // Tingkatkan kecepatan musuh
+            }
+        }
+
         // Periksa apakah musuh telah menguasai area terlalu banyak
         if (conqueredArea >= maxConqueredArea) {
             gameOver(); // Tampilkan pesan game over
@@ -169,6 +207,14 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         // Periksa apakah pemain kehabisan nyawa
         if (lives <= 0) {
             gameOver(); // Tampilkan pesan game over
+        }
+
+        // Update status perisai
+        if (shieldActive) {
+            shieldDuration--;
+            if (shieldDuration <= 0) {
+                shieldActive = false;
+            }
         }
     }
 
@@ -218,6 +264,21 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         for (PowerUp powerUp : powerUps) {
             g.fillOval(powerUp.getX(), powerUp.getY(), powerUp.getWidth(), powerUp.getHeight());
         }
+
+        // Gambar level
+        g.drawString("Level: " + level, getWidth() / 2 - 40, 20); // Gambar level di tengah atas
+
+        // Gambar status perisai
+        if (shieldActive) {
+            g.setColor(new Color(0, 0, 255, 100)); // Gambar perisai berwarna biru transparan
+            g.fillOval(playerX - 10, playerY - 10, 70, 70); // Gambar lingkaran perisai di sekitar pemain
+        }
+
+        // gambar status laser
+        if (laserActive) {
+            g.setColor(Color.RED); // Gambar laser berwarna merah
+            g.fillRect(playerX + 20, 0, 5, playerY); // Gambar laser dari pemain ke atas
+        }
     }
 
     // Metode KeyListener
@@ -259,6 +320,16 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         System.exit(0); // Keluar dari aplikasi
     }
 
+    private void activateShield() {
+        shieldActive = true; // Aktifkan perisai
+        shieldDuration = 300; // Durasi perisai aktif (misalnya 5 detik)
+    }
+
+    private void activateLaser() {
+        laserActive = true; // Aktifkan laser
+        laserDuration = 150; // Durasi laser aktif selama 150 frame (misalnya 2,5 detik)
+    }
+
     // kelas peluru
     private static class Bullet {
         private int x, y;
@@ -294,7 +365,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private static class Enemy {
         private int x, y;
         private final int width = 50, height = 50; // Ukuran musuh
-        private final int speed = 5; // Kecepatan musuh
+        private int speed = 5; // Kecepatan musuh
 
         public Enemy(int x, int y) {
             this.x = x;
@@ -324,53 +395,9 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         public Rectangle getBounds() {
             return new Rectangle(x, y, width, height); // Ukuran musuh
         }
-    }
 
-    // kelas power-up
-    private static class PowerUp {
-        private int x, y;
-        private final int width = 30, height = 30; // Ukuran power-up
-        private final int speed = 3; // Kecepatan power-up
-        private boolean visible = true;
-
-        public PowerUp(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public void move() {
-            y += speed; // Gerakkan power-up ke bawah
-            if (y > 600) { // Hilangkan jika keluar layar
-                visible = false;
-            }
-        }
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public int getWidth() {
-            return width;
-        }
-
-        public int getHeight() {
-            return height;
-        }
-
-        public boolean isVisible() {
-            return visible;
-        }
-
-        public void setVisible(boolean visible) {
-            this.visible = visible;
-        }
-
-        public Rectangle getBounds() {
-            return new Rectangle(x, y, width, height);
+        public void increaseSpeed(int increment) {
+            this.speed += increment; // Tingkatkan kecepatan musuh
         }
     }
 }
