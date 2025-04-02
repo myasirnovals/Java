@@ -1,0 +1,31 @@
+package org.kelompok2;
+
+public class Bullet {
+    private int x, y;
+    private final int width = 5, height = 10;
+
+    public Bullet(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void move() {
+        y -= 15; // Gerakkan peluru ke atas
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+}

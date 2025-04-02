@@ -85,6 +85,27 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         }
     }
 
+    private void spawnEnemy() {
+        enemySpawnTimer++;
+        if (enemySpawnTimer >= 100) { // spawn setiap 100 frame
+            int x = (int) (Math.random() * getWidth()); // posisi acak
+            int y = 50; // posisi di luar layar
+            int width = 50; // lebar musuh
+            int height = 50; // tinggi musuh
+            int speed = 5; // kecepatan musuh
+
+            // pilih pola gerakan acak
+            String[] pattern = {"zigzag", "circle", "random"};
+            String movementPattern = pattern[(int) (Math.random() * pattern.length)];
+
+            System.out.println("Spawn enemy at (" + x + ", " + y + ") with pattern: " + movementPattern);
+
+            // tambahkan musuh ke daftar
+            enemies.add(new Enemy(x, y, width, height, speed, movementPattern));
+            enemySpawnTimer = 0; // reset timer spawn musuh
+        }
+    }
+
     private void updateGame() {
         // Update posisi peluru
         for (Bullet bullet : bullets) {
@@ -95,6 +116,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         }
 
         // Update posisi musuh
+        spawnEnemy();
         for (Enemy enemy : enemies) {
             enemy.move();
 
@@ -111,6 +133,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
                     lives--; // Kurangi nyawa pemain
                 }
 
+                score += 10;
                 enemies.remove(enemy); // Hapus musuh yang bertabrakan dengan pemain
             }
         }
@@ -178,14 +201,6 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
                 }
                 powerUps.remove(powerUp); // Hapus power-up setelah diambil
             }
-        }
-
-        // Spawn musuh baru setiap 100 frame
-        enemySpawnTimer++;
-        if (enemySpawnTimer >= 100) {
-            int enemyX = (int) (Math.random() * (getWidth() - 50)); // Posisi acak
-            enemies.add(new Enemy(enemyX, 0)); // Tambahkan musuh baru di atas layar
-            enemySpawnTimer = 0;
         }
 
         // Spawn power-up setiap 300 frame (atau 5 detik pada 60 FPS)
@@ -349,76 +364,5 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private void activateLaser() {
         laserActive = true; // Aktifkan laser
         laserDuration = 150; // Durasi laser aktif selama 150 frame (misalnya 2,5 detik)
-    }
-
-    // kelas peluru
-    private static class Bullet {
-        private int x, y;
-        private final int width = 5, height = 10;
-
-        public Bullet(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public void move() {
-            y -= 15; // Gerakkan peluru ke atas
-        }
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public int getWidth() {
-            return width;
-        }
-
-        public int getHeight() {
-            return height;
-        }
-    }
-
-    // kelas musuh
-    private static class Enemy {
-        private int x, y;
-        private final int width = 50, height = 50; // Ukuran musuh
-        private int speed = 5; // Kecepatan musuh
-
-        public Enemy(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public void move() {
-            y += speed; // Gerakkan musuh ke bawah
-        }
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public int getWidth() {
-            return width;
-        }
-
-        public int getHeight() {
-            return height;
-        }
-
-        public Rectangle getBounds() {
-            return new Rectangle(x, y, width, height); // Ukuran musuh
-        }
-
-        public void increaseSpeed(int increment) {
-            this.speed += increment; // Tingkatkan kecepatan musuh
-        }
     }
 }
