@@ -30,6 +30,10 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     // gambar pemain
     private Image playerSprite;
 
+    // gambar latar belakang
+    private Image background;
+    private int backgroundY = 0; // posisi latar belakang
+
     // peluru
     private CopyOnWriteArrayList<Bullet> bullets = new CopyOnWriteArrayList<>(); // daftar peluru
     private final int bulletSpeed = 15; // kecepatan peluru
@@ -58,6 +62,13 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         } catch (Exception e) {
             System.err.println("Gagal memuat gambar pemain: " + e.getMessage());
         }
+
+        // muat gambar latar belakang
+        try {
+            background = ImageIO.read(new File("assets/Background/space2_4-frames.png"));
+        } catch (Exception e) {
+            System.err.println("Gagal memuat gambar latar belakang: " + e.getMessage());
+        }
     }
 
     @Override
@@ -84,12 +95,12 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         }
 
         // Update posisi musuh
-        for (Enemy enemy: enemies) {
+        for (Enemy enemy : enemies) {
             enemy.move();
 
             // tambahkan daerah yang dikuasai jika musuh mencapai area bawah
             if (enemy.getY() > getHeight()) {
-                conqueredArea ++; // Tambah area yang dikuasai
+                conqueredArea++; // Tambah area yang dikuasai
                 enemies.remove(enemy); // Hapus musuh yang keluar dari layar
                 continue; // lanjutkan ke iterasi berikutnya
             }
@@ -107,8 +118,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         // Deteksi tabrakan antara peluru dan musuh
         for (Bullet bullet : bullets) {
             for (Enemy enemy : enemies) {
-                if (bullet.getX() < enemy.getX() + enemy.getWidth() && bullet.getX() + bullet.getWidth() > enemy.getX() &&
-                    bullet.getY() < enemy.getY() + enemy.getHeight() && bullet.getY() + bullet.getHeight() > enemy.getY()) {
+                if (bullet.getX() < enemy.getX() + enemy.getWidth() && bullet.getX() + bullet.getWidth() > enemy.getX() && bullet.getY() < enemy.getY() + enemy.getHeight() && bullet.getY() + bullet.getHeight() > enemy.getY()) {
                     // Tabrakan terdeteksi, hapus peluru dan musuh
                     bullets.remove(bullet);
                     enemies.remove(enemy);
@@ -222,9 +232,20 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Atur warna latar belakang
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, getWidth(), getHeight());
+        // Gambar latar belakang
+        if (background != null) {
+            g.drawImage(background, 0, backgroundY, getWidth(), getHeight(), null);
+            g.drawImage(background, 0, backgroundY - getHeight(), getWidth(), getHeight(), null);
+        } else {
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, getWidth(), getHeight());
+        }
+
+        // update posisi latar belakang
+        backgroundY += 2; // Gerakkan latar belakang ke bawah
+        if (backgroundY >= getHeight()) {
+            backgroundY = 0; // Reset posisi latar belakang
+        }
 
         // Gambar pemain (sprite)
         if (playerSprite != null) {
