@@ -33,6 +33,10 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     // gambar pemain
     private Image playerSprite;
 
+    // gambar boss
+    private Boss boss;
+    private boolean bossBattle = false; // status pertarungan boss
+
     // gambar latar belakang
     private Image background;
     private int backgroundY = 0; // posisi latar belakang
@@ -74,6 +78,13 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             background = ImageIO.read(new File("assets/Background/space2_4-frames.png"));
         } catch (Exception e) {
             System.err.println("Gagal memuat gambar latar belakang: " + e.getMessage());
+        }
+
+        // Muat boss
+        try {
+            boss = new Boss(getWidth() / 2 - 50, 50); // Posisi awal Boss di tengah atas
+        } catch (Exception e) {
+            System.err.println("Gagal memuat Boss: " + e.getMessage());
         }
     }
 
@@ -235,6 +246,32 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             }
         }
 
+        // spawn boss
+        if (level % 5 == 0 && !bossBattle) {
+            bossBattle = true;
+            boss = new Boss(getWidth() / 2 -50, 50); // muat boss baru
+        }
+
+        // update boss jika pertarungan boss sedang berlangsung
+        if (bossBattle) {
+            boss.update();
+
+            // deteksi tabrakan antara peluru dan boss
+            for (Bullet bullet : bullets) {
+                if (boss.getBounds().intersects(bullet.getBounds())) {
+                    boss.hit();
+                    bullets.remove(bullet);
+                    break;
+                }
+            }
+
+            // periksa apakah boss sudah mati
+            if (boss.isDead()) {
+                bossBattle = false;
+                level++;
+            }
+        }
+
         // Spawn power-up setiap 300 frame (atau 5 detik pada 60 FPS)
         powerUpSpawnTimer++;
         if (powerUpSpawnTimer >= 300) {
@@ -350,6 +387,11 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
 
         // Gambar skor tertinggi
         g.drawString("High Score: " + highScore, getWidth() / 2 - 60, 40); // Gambar skor tertinggi di tengah atas
+
+        // gambar boss jika pertarungan boss sedang berlangsung
+        if (bossBattle) {
+            boss.draw(g); // Gambar boss
+        }
     }
 
     // Metode KeyListener
