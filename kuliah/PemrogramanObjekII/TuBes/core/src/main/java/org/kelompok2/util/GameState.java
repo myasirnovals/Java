@@ -32,6 +32,10 @@ public class GameState {
         }
     }
 
+    public void increaseLevel() {
+        level++;
+    }
+
     // Method untuk menambah conquered area
     public void increaseConqueredArea(int amount) {
         conqueredArea += amount;

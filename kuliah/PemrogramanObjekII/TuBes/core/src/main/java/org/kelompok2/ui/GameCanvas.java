@@ -19,6 +19,10 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private Image background;
     private boolean leftPressed = false;  // Tambahkan variabel untuk tracking tombol
     private boolean rightPressed = false; // Tambahkan variabel untuk tracking tombol
+    private int scorePerLevel = 150; // Skor yang diperlukan untuk naik level
+    private int lastLevelUpScore = 0; // Skor terakhir saat naik level
+    private boolean showLevelUpMessage = false; // Flag untuk menampilkan pesan level up
+    private int levelUpMessageTimer = 0; // Timer untuk pesan level up
 
     private final GameState gameState;
     private final Player player;
@@ -100,6 +104,27 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             gameState.setGameOver(true);
             gameState.setGameOverReason("Area Fully Conquered");
             return;
+        }
+
+        // Cek kondisi untuk kenaikan level berdasarkan skor
+        int currentScore = gameState.getScore();
+        int nextLevelScore = lastLevelUpScore + scorePerLevel;
+
+        if (currentScore >= nextLevelScore) {
+            gameState.increaseLevel();
+            lastLevelUpScore = nextLevelScore;
+
+            // tampilkan pesan level up
+            showLevelUpMessage = true;
+            levelUpMessageTimer = 120; // tampilkan selama 2 detik (120 frame)
+        }
+
+        // update timer pesan level up
+        if (showLevelUpMessage) {
+            levelUpMessageTimer--;
+            if (levelUpMessageTimer <= 0) {
+                showLevelUpMessage = false;
+            }
         }
 
         if (gameState.getLevel() % 5 == 0 && !bossManager.isBossBattle()) {
@@ -193,6 +218,17 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             g2d.drawString("Laser Active: " + laserDuration / 60 + "s", 20, getHeight() - 60);
         }
 
+        // Tampilkan pesan level up jika aktif
+        if (showLevelUpMessage) {
+            Font levelUpFont = new Font("Arial", Font.BOLD, 30);
+            g2d.setFont(levelUpFont);
+            g2d.setColor(Color.GREEN);
+            String levelUpText = "LEVEL UP! " + gameState.getLevel();
+            fm = g2d.getFontMetrics();
+            int levelUpWidth = fm.stringWidth(levelUpText);
+            g2d.drawString(levelUpText, getWidth() / 2 - levelUpWidth / 2, getHeight() / 2 - 100);
+        }
+
         // Jika game over
         if (gameState.isGameOver()) {
             Font gameOverFont = new Font("Arial", Font.BOLD, 40);
@@ -246,6 +282,11 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         gameState.setConqueredArea(0);
         gameState.setGameOver(false);
         gameState.setGameOverReason("");
+
+        // Reset variabel level up
+        lastLevelUpScore = 0;
+        showLevelUpMessage = false;
+        levelUpMessageTimer = 0;
 
         // Reset posisi player
         player.setX(375);
