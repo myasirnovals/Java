@@ -17,6 +17,8 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private boolean laserActive = false;
     private int laserDuration = 0;
     private Image background;
+    private boolean leftPressed = false;  // Tambahkan variabel untuk tracking tombol
+    private boolean rightPressed = false; // Tambahkan variabel untuk tracking tombol
 
     private final GameState gameState;
     private final Player player;
@@ -57,6 +59,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     public void activateLaser() {
         laserActive = true;
         laserDuration = 300; // contoh durasi laser aktif (5 detik)
+        bulletManager.setLaserMode(true); // Pastikan bulletManager diset ke mode laser
     }
 
     @Override
@@ -73,27 +76,56 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     }
 
     private void updateGame() {
+        // Jika game over, jangan update game
+        if (gameState.isGameOver()) {
+            return;
+        }
+
+        // Update player movement
+        if (leftPressed) {
+            player.moveLeft();
+        }
+        if (rightPressed) {
+            player.moveRight(getWidth());
+        }
+
         bulletManager.updateBullets(getHeight(), enemyManager.getEnemies(), gameState);
         enemyManager.spawnEnemy(getWidth());
         enemyManager.updateEnemies(getHeight(), player.getBounds(), shieldActive, gameState);
         powerUpManager.spawnPowerUp(getWidth());
         powerUpManager.updatePowerUps(player.getBounds(), gameState, this);
 
+        // Cek kondisi conquered area
+        if (gameState.getConqueredArea() >= gameState.getMaxConqueredArea()) {
+            gameState.setGameOver(true);
+            gameState.setGameOverReason("Area Fully Conquered");
+            return;
+        }
+
         if (gameState.getLevel() % 5 == 0 && !bossManager.isBossBattle()) {
             bossManager.spawnBoss(getWidth());
         }
-        bossManager.updateBoss(bulletManager.getBullets(), gameState);
+
+        // Pastikan boss tidak null sebelum update
+        if (bossManager.isBossBattle()) {
+            bossManager.updateBoss(bulletManager.getBullets(), gameState);
+        }
 
         // Update shield duration
         if (shieldActive) {
             shieldDuration--;
-            if (shieldDuration <= 0) shieldActive = false;
+            if (shieldDuration <= 0) {
+                shieldActive = false;
+            }
         }
 
         // Update laser duration
         if (laserActive) {
             laserDuration--;
-            if (laserDuration <= 0) laserActive = false;
+            if (laserDuration <= 0) {
+                laserActive = false;
+                bulletManager.setLaserMode(false); // Nonaktifkan mode laser
+            }
         }
     }
 
@@ -110,7 +142,11 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         bulletManager.drawBullets(g2d);
         enemyManager.drawEnemies(g2d);
         powerUpManager.drawPowerUps(g2d);
-        bossManager.drawBoss(g2d);
+
+        // Pastikan boss tidak null sebelum menggambar
+        if (bossManager.isBossBattle()) {
+            bossManager.drawBoss(g2d);
+        }
 
         // Set font untuk semua teks
         Font regularFont = new Font("Arial", Font.BOLD, 16);
@@ -130,7 +166,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         // High Score di bawah Level dengan warna kuning juga
         String highScoreText = "High Score: " + gameState.getHighScore();
         int highScoreWidth = fm.stringWidth(highScoreText);
-        g2d.drawString(highScoreText, getWidth() / 2 - highScoreWidth / 2, 50); // 25 pixels di bawah Level
+        g2d.drawString(highScoreText, getWidth() / 2 - highScoreWidth / 2, 50);
 
         // Conquered Area di pojok kanan atas
         g2d.setColor(Color.WHITE);
@@ -145,7 +181,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         // Tampilkan status shield dan laser jika aktif
         if (shieldActive) {
             g2d.setColor(Color.BLUE);
-            g2d.drawString("Shield Active: " + shieldDuration/60 + "s", 20, getHeight() - 40);
+            g2d.drawString("Shield Active: " + shieldDuration / 60 + "s", 20, getHeight() - 40);
 
             // Gambar efek shield di sekitar player
             g2d.setColor(new Color(0, 0, 255, 100)); // Biru transparan
@@ -154,18 +190,8 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
 
         if (laserActive) {
             g2d.setColor(Color.RED);
-            g2d.drawString("Laser Active: " + laserDuration/60 + "s", 20, getHeight() - 60);
-
-            // Tambahkan logika untuk menembak laser yang lebih kuat
-            if (bulletManager != null) {
-                bulletManager.setLaserMode(true);
-            }
-        } else {
-            if (bulletManager != null) {
-                bulletManager.setLaserMode(false);
-            }
+            g2d.drawString("Laser Active: " + laserDuration / 60 + "s", 20, getHeight() - 60);
         }
-
 
         // Jika game over
         if (gameState.isGameOver()) {
@@ -175,29 +201,105 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             String gameOverText = "GAME OVER";
             fm = g2d.getFontMetrics();
             int gameOverWidth = fm.stringWidth(gameOverText);
-            g2d.drawString(gameOverText, getWidth() / 2 - gameOverWidth / 2, getHeight() / 2);
+            g2d.drawString(gameOverText, getWidth() / 2 - gameOverWidth / 2, getHeight() / 2 - 40);
 
+            // Tambahkan alasan game over
+            Font reasonFont = new Font("Arial", Font.BOLD, 24);
+            g2d.setFont(reasonFont);
+            g2d.setColor(Color.YELLOW);
+            String reasonText = gameState.getGameOverReason();
+            fm = g2d.getFontMetrics();
+            int reasonWidth = fm.stringWidth(reasonText);
+            g2d.drawString(reasonText, getWidth() / 2 - reasonWidth / 2, getHeight() / 2);
+
+            // Tampilkan skor akhir
+            Font scoreFont = new Font("Arial", Font.BOLD, 30);
+            g2d.setFont(scoreFont);
+            g2d.setColor(Color.WHITE);
+            String finalScoreText = "Final Score: " + gameState.getScore();
+            fm = g2d.getFontMetrics();
+            int scoreWidth = fm.stringWidth(finalScoreText);
+            g2d.drawString(finalScoreText, getWidth() / 2 - scoreWidth / 2, getHeight() / 2 + 40);
+
+            // Tampilkan high score
+            String highScoreText2 = "High Score: " + gameState.getHighScore();
+            fm = g2d.getFontMetrics();
+            int highScoreWidth2 = fm.stringWidth(highScoreText2);
+            g2d.drawString(highScoreText2, getWidth() / 2 - highScoreWidth2 / 2, getHeight() / 2 + 80);
+
+            // Instruksi untuk memulai ulang
             Font instructionFont = new Font("Arial", Font.PLAIN, 20);
             g2d.setFont(instructionFont);
-            String restartText = "Press SPACE to restart";
+            g2d.setColor(Color.GREEN);
+            String instructionText = "Press 'R' to Restart or 'ESC' to Exit";
             fm = g2d.getFontMetrics();
-            int restartWidth = fm.stringWidth(restartText);
-            g2d.drawString(restartText, getWidth() / 2 - restartWidth / 2, getHeight() / 2 + 40);
+            int instructionWidth = fm.stringWidth(instructionText);
+            g2d.drawString(instructionText, getWidth() / 2 - instructionWidth / 2, getHeight() / 2 + 130);
         }
+    }
+
+    // Method untuk me-reset game
+    public void resetGame() {
+        gameState.setScore(0);
+        gameState.setLives(3);
+        gameState.setLevel(1);
+        gameState.setConqueredArea(0);
+        gameState.setGameOver(false);
+        gameState.setGameOverReason("");
+
+        // Reset posisi player
+        player.setX(375);
+        player.setY(500);
+
+        // Bersihkan semua entitas
+        bulletManager.getBullets().clear();
+        enemyManager.getEnemies().clear();
+        powerUpManager.getPowerUps().clear();
+        bossManager.resetBoss();
+
+        // Reset status power-up
+        shieldActive = false;
+        shieldDuration = 0;
+        laserActive = false;
+        laserDuration = 0;
+        bulletManager.setLaserMode(false);
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_LEFT) player.moveLeft();
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT) player.moveRight(getWidth());
-        if (e.getKeyCode() == KeyEvent.VK_SPACE) bulletManager.addBullet(player.getX() + 20, player.getY());
+        int key = e.getKeyCode();
+
+        if (gameState.isGameOver()) {
+            if (key == KeyEvent.VK_R) {
+                resetGame();
+            } else if (key == KeyEvent.VK_ESCAPE) {
+                System.exit(0);
+            }
+            return;
+        }
+
+        if (key == KeyEvent.VK_LEFT) {
+            leftPressed = true;
+        } else if (key == KeyEvent.VK_RIGHT) {
+            rightPressed = true;
+        } else if (key == KeyEvent.VK_SPACE) {
+            bulletManager.addBullet(player.getX() + player.getWidth() / 2 - 2, player.getY());
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        if (key == KeyEvent.VK_LEFT) {
+            leftPressed = false;
+        } else if (key == KeyEvent.VK_RIGHT) {
+            rightPressed = false;
+        }
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
+        // Tidak diimplementasikan
     }
 }

@@ -8,6 +8,7 @@ public class GameState {
     private int conqueredArea;
     private final int maxConqueredArea = 100;
     private boolean gameOver;
+    private String gameOverReason; // Tambahkan variabel untuk menyimpan alasan game over
 
     public GameState() {
         this.score = 0;
@@ -15,6 +16,7 @@ public class GameState {
         this.level = 1;
         this.highScore = 0;
         this.conqueredArea = 0;
+        this.gameOverReason = "";
     }
 
     // method untuk mengurangi lives
@@ -26,6 +28,17 @@ public class GameState {
         // jika lives habis, set gameOver menjadi true
         if (lives == 0) {
             setGameOver(true);
+            setGameOverReason("No Lives Left");
+        }
+    }
+
+    // Method untuk menambah conquered area
+    public void increaseConqueredArea(int amount) {
+        conqueredArea += amount;
+        if (conqueredArea >= maxConqueredArea) {
+            conqueredArea = maxConqueredArea;
+            setGameOver(true);
+            setGameOverReason("Area Fully Conquered");
         }
     }
 
@@ -35,6 +48,10 @@ public class GameState {
 
     public void setScore(int score) {
         this.score = score;
+        // Update high score jika score saat ini lebih tinggi
+        if (score > highScore) {
+            highScore = score;
+        }
     }
 
     public int getLives() {
@@ -43,6 +60,10 @@ public class GameState {
 
     public void setLives(int lives) {
         this.lives = Math.max(0, lives);
+        if (this.lives == 0) {
+            setGameOver(true);
+            setGameOverReason("No Lives Left");
+        }
     }
 
     public int getLevel() {
@@ -66,7 +87,15 @@ public class GameState {
     }
 
     public void setConqueredArea(int conqueredArea) {
-        this.conqueredArea = conqueredArea;
+        this.conqueredArea = Math.min(conqueredArea, maxConqueredArea);
+        if (this.conqueredArea == maxConqueredArea) {
+            setGameOver(true);
+            setGameOverReason("Area Fully Conquered");
+        }
+    }
+
+    public int getMaxConqueredArea() {
+        return maxConqueredArea;
     }
 
     public boolean isGameOver() {
@@ -77,14 +106,11 @@ public class GameState {
         this.gameOver = gameOver;
     }
 
-    public int getMaxConqueredArea() {
-        return maxConqueredArea;
+    public String getGameOverReason() {
+        return gameOverReason;
     }
 
-    // Metode untuk update high score jika score saat ini lebih tinggi
-    public void updateHighScore() {
-        if (score > highScore) {
-            highScore = score;
-        }
+    public void setGameOverReason(String reason) {
+        this.gameOverReason = reason;
     }
 }

@@ -44,4 +44,9 @@ public class BossManager {
     public boolean isBossBattle() {
         return bossBattle;
     }
+
+    public void resetBoss() {
+        boss = null;
+        bossBattle = false;
+    }
 }
