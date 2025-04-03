@@ -10,9 +10,21 @@ import java.util.Iterator;
 
 public class BulletManager {
     private ArrayList<Bullet> bullets = new ArrayList<>();
+    private boolean laserMode = false;
+
+    public void setLaserMode(boolean laserMode) {
+        this.laserMode = laserMode;
+    }
 
     public void addBullet(int x, int y) {
-        bullets.add(new Bullet(x, y));
+        if (laserMode) {
+            // Tembakkan 3 peluru saat laser aktif
+            bullets.add(new Bullet(x, y, 5, 15, Color.RED));
+            bullets.add(new Bullet(x - 10, y, 5, 15, Color.RED));
+            bullets.add(new Bullet(x + 10, y, 5, 15, Color.RED));
+        } else {
+            bullets.add(new Bullet(x, y, 5, 10, Color.WHITE));
+        }
     }
 
     public void updateBullets(int canvasHeight, ArrayList<Enemy> enemies, GameState gameState) {
@@ -34,7 +46,12 @@ public class BulletManager {
 
                 if (bullet.getBounds().intersects(enemy.getBounds())) {
                     enemyIterator.remove();
-                    gameState.setScore(gameState.getScore() + 10);
+                    // Laser memberikan skor lebih tinggi
+                    if (laserMode) {
+                        gameState.setScore(gameState.getScore() + 15); // Bonus skor untuk laser
+                    } else {
+                        gameState.setScore(gameState.getScore() + 10);
+                    }
                     bulletIterator.remove();
                     bulletRemoved = true;
                     break;
@@ -46,13 +63,11 @@ public class BulletManager {
     }
 
     public void drawBullets(Graphics g) {
-        g.setColor(Color.RED);
         for (Bullet bullet : bullets) {
-            g.fillRect(bullet.getX(), bullet.getY(), bullet.getWidth(), bullet.getHeight());
+            bullet.draw(g);
         }
     }
 
-    // Method tambahan
     public ArrayList<Bullet> getBullets() {
         return bullets;
     }

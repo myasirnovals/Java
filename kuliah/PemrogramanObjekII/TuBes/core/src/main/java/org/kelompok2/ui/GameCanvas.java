@@ -142,6 +142,31 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         g2d.setColor(Color.WHITE);
         g2d.drawString("Lives: " + gameState.getLives(), 20, getHeight() - 20);
 
+        // Tampilkan status shield dan laser jika aktif
+        if (shieldActive) {
+            g2d.setColor(Color.BLUE);
+            g2d.drawString("Shield Active: " + shieldDuration/60 + "s", 20, getHeight() - 40);
+
+            // Gambar efek shield di sekitar player
+            g2d.setColor(new Color(0, 0, 255, 100)); // Biru transparan
+            g2d.fillOval(player.getX() - 5, player.getY() - 5, player.getWidth() + 10, player.getHeight() + 10);
+        }
+
+        if (laserActive) {
+            g2d.setColor(Color.RED);
+            g2d.drawString("Laser Active: " + laserDuration/60 + "s", 20, getHeight() - 60);
+
+            // Tambahkan logika untuk menembak laser yang lebih kuat
+            if (bulletManager != null) {
+                bulletManager.setLaserMode(true);
+            }
+        } else {
+            if (bulletManager != null) {
+                bulletManager.setLaserMode(false);
+            }
+        }
+
+
         // Jika game over
         if (gameState.isGameOver()) {
             Font gameOverFont = new Font("Arial", Font.BOLD, 40);

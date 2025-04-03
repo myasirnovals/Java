@@ -53,12 +53,13 @@ public class PowerUpManager {
         }
     }
 
-
     public void drawPowerUps(Graphics g) {
-        g.setColor(Color.YELLOW);
         for (PowerUp powerUp : powerUps) {
-            g.fillOval(powerUp.getX(), powerUp.getY(), powerUp.getWidth(), powerUp.getHeight());
+            powerUp.draw(g);
         }
     }
-}
 
+    public ArrayList<PowerUp> getPowerUps() {
+        return powerUps;
+    }
+}
