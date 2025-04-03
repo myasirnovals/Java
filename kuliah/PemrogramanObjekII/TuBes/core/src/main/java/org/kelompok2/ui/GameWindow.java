@@ -1,4 +1,4 @@
-package org.kelompok2;
+package org.kelompok2.ui;
 
 import javax.swing.JFrame;
 

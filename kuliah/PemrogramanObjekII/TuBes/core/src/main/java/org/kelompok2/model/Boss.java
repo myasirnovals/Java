@@ -1,4 +1,4 @@
-package org.kelompok2;
+package org.kelompok2.model;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
