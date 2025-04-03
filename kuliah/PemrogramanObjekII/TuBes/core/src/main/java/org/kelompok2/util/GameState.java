@@ -7,6 +7,7 @@ public class GameState {
     private int highScore;
     private int conqueredArea;
     private final int maxConqueredArea = 100;
+    private boolean gameOver;
 
     public GameState() {
         this.score = 0;
@@ -14,6 +15,18 @@ public class GameState {
         this.level = 1;
         this.highScore = 0;
         this.conqueredArea = 0;
+    }
+
+    // method untuk mengurangi lives
+    public void decreaseLives() {
+        if (lives > 0) {
+            lives--;
+        }
+
+        // jika lives habis, set gameOver menjadi true
+        if (lives == 0) {
+            setGameOver(true);
+        }
     }
 
     public int getScore() {
@@ -29,7 +42,7 @@ public class GameState {
     }
 
     public void setLives(int lives) {
-        this.lives = lives;
+        this.lives = Math.max(0, lives);
     }
 
     public int getLevel() {
@@ -54,5 +67,24 @@ public class GameState {
 
     public void setConqueredArea(int conqueredArea) {
         this.conqueredArea = conqueredArea;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
+    public int getMaxConqueredArea() {
+        return maxConqueredArea;
+    }
+
+    // Metode untuk update high score jika score saat ini lebih tinggi
+    public void updateHighScore() {
+        if (score > highScore) {
+            highScore = score;
+        }
     }
 }
