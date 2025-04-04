@@ -1,5 +1,6 @@
 package org.kelompok2.manager;
 
+import org.kelompok2.model.EnemyBullet;
 import org.kelompok2.ui.GameCanvas;
 import org.kelompok2.model.Enemy;
 import org.kelompok2.util.GameState;
@@ -9,21 +10,17 @@ import java.util.ArrayList;
 
 public class EnemyManager {
     private ArrayList<Enemy> enemies = new ArrayList<>();
-    private int spawnTimer = 0; // Timer untuk spawn musuh
+    private ArrayList<EnemyBullet> enemyBullets = new ArrayList<>();
+    private int spawnTimer = 0;
 
     public void spawnEnemy(int canvasWidth) {
         spawnTimer++;
-        if (spawnTimer >= 100) { // Spawn setiap 100 frame
-            int x = (int) (Math.random() * canvasWidth); // Posisi acak
-            int y = 50; // Posisi awal musuh di atas layar
-            int width = 50, height = 50, speed = 5;
-
-            // Pola gerakan acak
-            String[] patterns = {"zigzag", "circle", "random", "default"};
-            String movementPattern = patterns[(int) (Math.random() * patterns.length)];
-
-            enemies.add(new Enemy(x, y, width, height, speed, movementPattern));
-            spawnTimer = 0; // Reset timer
+        if (spawnTimer >= 100) {
+            int enemyWidth = 50; // sesuaikan dengan ukuran enemy kamu
+            int x = (int) (Math.random() * (canvasWidth - enemyWidth));
+            x = Math.max(x, 0); // memastikan posisi enemy tidak negatif
+            enemies.add(new Enemy(x, 0, enemyWidth, 50, 3, "default"));
+            spawnTimer = 0;
         }
     }
 
@@ -32,35 +29,65 @@ public class EnemyManager {
             Enemy enemy = enemies.get(i);
             enemy.move();
 
-            // Hapus musuh jika keluar dari layar
+            if (enemy.isShooting() && Math.random() < 0.02) { // Peluang menembak acak
+                enemyBullets.add(new EnemyBullet(enemy.getX() + enemy.getWidth() / 2, enemy.getY() + enemy.getHeight()));
+            }
+
             if (enemy.getY() > canvasHeight) {
                 enemies.remove(i);
                 i--;
-                gameState.setConqueredArea(gameState.getConqueredArea() + 1);
+                gameState.increaseConqueredArea(1);
                 continue;
             }
 
-            // Deteksi tabrakan dengan pemain
             if (enemy.getBounds().intersects(playerBounds)) {
                 enemies.remove(i);
                 i--;
                 if (!shieldActive) {
-                    gameState.setLives(gameState.getLives() - 1); // Kurangi nyawa pemain
+                    gameState.decreaseLives();
                 }
-                gameState.setScore(gameState.getScore() + 10); // Tambahkan skor
+                gameState.setScore(gameState.getScore() + 10);
+            }
+        }
+
+        // Update peluru musuh
+        for (int i = 0; i < enemyBullets.size(); i++) {
+            EnemyBullet bullet = enemyBullets.get(i);
+            bullet.move();
+
+            if (bullet.getY() > canvasHeight) {
+                enemyBullets.remove(i);
+                i--;
+                continue;
+            }
+
+            if (bullet.getBounds().intersects(playerBounds)) {
+                enemyBullets.remove(i);
+                i--;
+                if (!shieldActive) {
+                    gameState.decreaseLives();
+                }
             }
         }
     }
-
 
     public void drawEnemies(Graphics g) {
         g.setColor(Color.GREEN);
         for (Enemy enemy : enemies) {
             g.fillRect(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
         }
+
+        for (EnemyBullet bullet : enemyBullets) {
+            bullet.draw(g);
+        }
     }
 
     public ArrayList<Enemy> getEnemies() {
         return enemies;
     }
+
+    public ArrayList<EnemyBullet> getEnemyBullets() {
+        return enemyBullets;
+    }
 }
+

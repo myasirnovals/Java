@@ -7,6 +7,9 @@ public class Enemy {
     private int width, height;
     private int speed;
     private String movementPattern; // Pola gerakan musuh
+    private boolean shooting = false;
+    private int shootTimer = 300; // 5 detik (300 frame pada 60fps)
+    private String state = "movingDown"; // movingDown -> shooting -> continueDown
 
     public Enemy(int x, int y, int width, int height, int speed, String movementPattern) {
         this.x = x;
@@ -18,23 +21,25 @@ public class Enemy {
     }
 
     public void move() {
-        switch (movementPattern) {
-            case "zigzag":
-                x += Math.sin(y / 30.0) * 10; // Gerakan zig-zag
-                y += speed;
-                break;
-            case "circle":
-                x += Math.cos(y / 30.0) * 10; // Gerakan melingkar
-                y += speed;
-                break;
-            case "random":
-                x += (Math.random() > 0.5 ? 1 : -1) * 5; // Gerakan acak
-                y += speed;
-                break;
-            default:
-                y += speed; // Gerakan lurus
-                break;
+        if (state.equals("movingDown")) {
+            y += speed;
+            if (y >= 150) { // Posisi berhenti untuk menembak
+                state = "shooting";
+            }
+        } else if (state.equals("shooting")) {
+            shootTimer--;
+            shooting = true;
+            if (shootTimer <= 0) {
+                state = "continueDown";
+                shooting = false;
+            }
+        } else if (state.equals("continueDown")) {
+            y += speed;
         }
+    }
+
+    public boolean isShooting() {
+        return shooting;
     }
 
     public void increaseSpeed(int increment) {
