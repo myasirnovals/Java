@@ -1,7 +1,9 @@
 package org.kelompok2.manager;
 
 import org.kelompok2.model.Boss;
+import org.kelompok2.model.BossBullet;
 import org.kelompok2.model.Bullet;
+import org.kelompok2.model.Player;
 import org.kelompok2.util.GameState;
 
 import java.awt.*;
@@ -16,14 +18,25 @@ public class BossManager {
         bossBattle = true;
     }
 
-    public void updateBoss(List<Bullet> bullets, GameState gameState, int canvasWidth) {
+    public void updateBoss(List<Bullet> bullets, GameState gameState, Player player, int canvasWidth) {
         if (!bossBattle) return;
 
         boss.update(canvasWidth);
 
+        // Cek peluru pemain mengenai boss
         bullets.removeIf(bullet -> {
             if (boss.getBounds().intersects(bullet.getBounds())) {
                 boss.hit();
+                return true;
+            }
+            return false;
+        });
+
+        // Cek peluru boss mengenai pemain
+        List<BossBullet> bossBullets = boss.getBullets();
+        bossBullets.removeIf(bossBullet -> {
+            if (bossBullet.getBounds().intersects(player.getBounds())) {
+                gameState.setLives(gameState.getLives() - 1); // Kurangi nyawa pemain
                 return true;
             }
             return false;

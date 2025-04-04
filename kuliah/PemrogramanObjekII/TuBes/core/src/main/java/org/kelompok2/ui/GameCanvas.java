@@ -130,13 +130,13 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             }
         }
 
-        if (gameState.getLevel() % 5 == 0 && !bossManager.isBossBattle()) {
+        if (gameState.getLevel() % 2 == 0 && !bossManager.isBossBattle()) {
             bossManager.spawnBoss(getWidth());
         }
 
         // Pastikan boss tidak null sebelum update
         if (bossManager.isBossBattle()) {
-            bossManager.updateBoss(bulletManager.getBullets(), gameState, getWidth());
+            bossManager.updateBoss(bulletManager.getBullets(), gameState, player, getWidth());
         }
 
         // Update shield duration
