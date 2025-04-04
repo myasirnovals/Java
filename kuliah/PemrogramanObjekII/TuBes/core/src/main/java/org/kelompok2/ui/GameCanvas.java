@@ -12,17 +12,18 @@ import java.io.File;
 import java.io.IOException;
 
 public class GameCanvas extends JPanel implements Runnable, KeyListener {
-    private boolean shieldActive = false;
     private int shieldDuration = 0;
-    private boolean laserActive = false;
     private int laserDuration = 0;
-    private Image background;
-    private boolean leftPressed = false;  // Tambahkan variabel untuk tracking tombol
-    private boolean rightPressed = false; // Tambahkan variabel untuk tracking tombol
     private int scorePerLevel = 150; // Skor yang diperlukan untuk naik level
     private int lastLevelUpScore = 0; // Skor terakhir saat naik level
-    private boolean showLevelUpMessage = false; // Flag untuk menampilkan pesan level up
     private int levelUpMessageTimer = 0; // Timer untuk pesan level up
+    private boolean shieldActive = false;
+    private boolean laserActive = false;
+    private boolean leftPressed = false;  // Tambahkan variabel untuk tracking tombol
+    private boolean rightPressed = false; // Tambahkan variabel untuk tracking tombol
+    private boolean showLevelUpMessage = false; // Flag untuk menampilkan pesan level up
+    private Image background;
+    private GameWindow gameWindow;
 
     private final GameState gameState;
     private final Player player;
@@ -31,7 +32,9 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private final PowerUpManager powerUpManager;
     private final BossManager bossManager;
 
-    public GameCanvas() {
+    public GameCanvas(GameWindow gameWindow) {
+        this.gameWindow = gameWindow;
+
         gameState = new GameState();
         bulletManager = new BulletManager();
         enemyManager = new EnemyManager();
@@ -314,7 +317,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             if (key == KeyEvent.VK_R) {
                 resetGame();
             } else if (key == KeyEvent.VK_ESCAPE) {
-                System.exit(0);
+                gameWindow.showMainMenu();
             }
             return;
         }

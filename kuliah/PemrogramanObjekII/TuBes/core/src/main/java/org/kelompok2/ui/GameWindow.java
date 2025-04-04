@@ -1,22 +1,42 @@
 package org.kelompok2.ui;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 public class GameWindow extends JFrame {
+
+    private GameCanvas gameCanvas;
+    private MainMenu mainMenu;
+
     public GameWindow() {
-        setTitle("Space Invaders");
+        setTitle("Space Shooter");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
         setResizable(false);
 
-        // Tambahkan kanvas ke jendela
-        add(new GameCanvas());
+        mainMenu = new MainMenu(this);
+        add(mainMenu);
 
         setVisible(true);
     }
 
+    public void showGame() {
+        remove(mainMenu);
+        gameCanvas = new GameCanvas(this); // tambahkan this
+        add(gameCanvas);
+        revalidate();
+        gameCanvas.requestFocusInWindow();
+    }
+
+    public void showMainMenu() {
+        remove(gameCanvas);
+        mainMenu = new MainMenu(this);
+        add(mainMenu);
+        revalidate();
+        mainMenu.requestFocusInWindow();
+    }
+
     public static void main(String[] args) {
-        new GameWindow();
+        SwingUtilities.invokeLater(GameWindow::new);
     }
 }
-
