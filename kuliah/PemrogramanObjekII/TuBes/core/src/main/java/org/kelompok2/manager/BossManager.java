@@ -16,10 +16,10 @@ public class BossManager {
         bossBattle = true;
     }
 
-    public void updateBoss(List<Bullet> bullets, GameState gameState) {
+    public void updateBoss(List<Bullet> bullets, GameState gameState, int canvasWidth) {
         if (!bossBattle) return;
 
-        boss.update();
+        boss.update(canvasWidth);
 
         bullets.removeIf(bullet -> {
             if (boss.getBounds().intersects(bullet.getBounds())) {
