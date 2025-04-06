@@ -23,6 +23,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private boolean rightPressed = false; // Tambahkan variabel untuk tracking tombol
     private boolean showLevelUpMessage = false; // Flag untuk menampilkan pesan level up
     private Image background;
+    private Image heartImage;
     private GameWindow gameWindow;
 
     private final GameState gameState;
@@ -46,6 +47,12 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
 
         try {
             background = ImageIO.read(new File("assets/Background/space2_4-frames.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            heartImage = ImageIO.read(new File("assets/Skill/life_up.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -203,8 +210,14 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         g2d.drawString(areaText, getWidth() - areaWidth - 20, 25);
 
         // Lives di pojok kiri bawah
-        g2d.setColor(Color.WHITE);
-        g2d.drawString("Lives: " + gameState.getLives(), 20, getHeight() - 20);
+        int lives = gameState.getLives();
+        int heartX = 20; // posisi awal untuk menggambar hati
+        int heartY = getHeight() - 40; // posisi Y untuk menggambar hati
+
+        for (int i = 0; i < lives; i++) {
+            g2d.drawImage(heartImage, heartX, heartY, 30, 30, null);
+            heartX += 35;
+        }
 
         // Tampilkan status shield dan laser jika aktif
         if (shieldActive) {
