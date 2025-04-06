@@ -72,9 +72,10 @@ public class EnemyManager {
     }
 
     public void drawEnemies(Graphics g) {
-        g.setColor(Color.GREEN);
         for (Enemy enemy : enemies) {
-            g.fillRect(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
+            if (enemy != null) {
+                g.drawImage(enemy.getSprite(), enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight(), null);
+            }
         }
 
         for (EnemyBullet bullet : enemyBullets) {

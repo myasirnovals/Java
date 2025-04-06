@@ -1,6 +1,9 @@
 package model;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class Enemy {
     private int x, y;
@@ -10,6 +13,7 @@ public class Enemy {
     private boolean shooting = false;
     private int shootTimer = 300; // 5 detik (300 frame pada 60fps)
     private String state = "movingDown"; // movingDown -> shooting -> continueDown
+    private Image sprite; // Gambar musuh
 
     public Enemy(int x, int y, int width, int height, int speed, String movementPattern) {
         this.x = x;
@@ -18,6 +22,13 @@ public class Enemy {
         this.height = height;
         this.speed = speed;
         this.movementPattern = movementPattern;
+
+        // muat gambar musuh
+        try {
+            this.sprite = ImageIO.read(new File("assets/Musuh/enemy1.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void move() {
@@ -64,5 +75,9 @@ public class Enemy {
 
     public int getHeight() {
         return height;
+    }
+
+    public Image getSprite() {
+        return sprite;
     }
 }
