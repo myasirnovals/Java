@@ -232,7 +232,9 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
 
         // tampilkan waktu
         g2d.setColor(Color.WHITE);
-        g2d.drawString("Time to next level: " + ((timePerLevel * 1000) - (System.currentTimeMillis() - lastLevelUpTime)) / 1000 + "s", 20, 50);
+        long timeRemaining = ((timePerLevel * 1000L) - (System.currentTimeMillis() - lastLevelUpTime)) / 1000;
+        timeRemaining = Math.max(timeRemaining, 0); // memastikan waktu tidak negatif
+        g2d.drawString("Time to next level: " + timeRemaining + "s", 20, 50);
 
         // Level di tengah atas dengan warna kuning
         g2d.setColor(Color.YELLOW);
