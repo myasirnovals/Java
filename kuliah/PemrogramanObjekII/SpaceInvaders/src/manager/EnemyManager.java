@@ -12,10 +12,23 @@ public class EnemyManager {
     private ArrayList<Enemy> enemies = new ArrayList<>();
     private ArrayList<EnemyBullet> enemyBullets = new ArrayList<>();
     private int spawnTimer = 0;
+    private int spawnInterval = 100; // Interval awal untuk spawn musuh
+
+    public void increaseEnemySpeed(int level) {
+        // Tingkatkan kecepatan musuh yang sudah ada
+        for (Enemy enemy : enemies) {
+            enemy.increaseSpeed(1); // Tambah kecepatan sebanyak 1
+        }
+    }
+
+    public void increaseSpawnRate(int level) {
+        // Kurangi interval spawn berdasarkan level (semakin kecil interval, semakin cepat spawn)
+        spawnInterval = Math.max(30, 100 - (level * 10)); // Minimal interval 30
+    }
 
     public void spawnEnemy(int canvasWidth) {
         spawnTimer++;
-        if (spawnTimer >= 100) {
+        if (spawnTimer >= spawnInterval) {
             int enemyWidth = 50; // sesuaikan dengan ukuran enemy kamu
             int x = (int) (Math.random() * (canvasWidth - enemyWidth));
             x = Math.max(x, 0); // memastikan posisi enemy tidak negatif

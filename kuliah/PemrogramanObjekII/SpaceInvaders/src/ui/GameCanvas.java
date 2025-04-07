@@ -17,6 +17,9 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private int scorePerLevel = 150; // Skor yang diperlukan untuk naik level
     private int lastLevelUpScore = 0; // Skor terakhir saat naik level
     private int levelUpMessageTimer = 0; // Timer untuk pesan level up
+    private int timePerLevel = 30; // Waktu dalam detik untuk naik level
+    private int gameTimer = 0; // Penghitung frame untuk menghitung waktu
+    private long lastLevelUpTime; // Waktu terakhir saat naik level (dalam milidetik)
     private boolean shieldActive = false;
     private boolean laserActive = false;
     private boolean leftPressed = false;  // Tambahkan variabel untuk tracking tombol
@@ -35,6 +38,8 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
 
     public GameCanvas(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
+
+        lastLevelUpTime = System.currentTimeMillis();
 
         gameState = new GameState();
         bulletManager = new BulletManager();
@@ -76,6 +81,31 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         bulletManager.setLaserMode(true); // Pastikan bulletManager diset ke mode laser
     }
 
+    private void checkLevelUp() {
+        // Hitung waktu bermain dalam detik (60 FPS)
+        gameTimer++;
+
+        // Cek apakah sudah waktunya naik level
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastLevelUpTime >= timePerLevel * 1000) {
+            gameState.increaseLevel();
+            lastLevelUpTime = currentTime;
+
+            // tampilkan pesan level up
+            showLevelUpMessage = true;
+            levelUpMessageTimer = 120; // tampilkan selama 2 detik (120 frame)
+
+            // Tingkatkan kesulitan berdasarkan level
+            enemyManager.increaseEnemySpeed(gameState.getLevel());
+            enemyManager.increaseSpawnRate(gameState.getLevel());
+
+            // Setiap 3 level, munculkan boss (jika belum ada)
+            if (gameState.getLevel() % 3 == 0 && !bossManager.isBossBattle()) {
+                bossManager.spawnBoss(getWidth());
+            }
+        }
+    }
+
     @Override
     public void run() {
         while (true) {
@@ -94,6 +124,8 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         if (gameState.isGameOver()) {
             return;
         }
+
+        // update waktu bermain
 
         // Update player movement
         if (leftPressed) {
@@ -116,18 +148,8 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             return;
         }
 
-        // Cek kondisi untuk kenaikan level berdasarkan skor
-        int currentScore = gameState.getScore();
-        int nextLevelScore = lastLevelUpScore + scorePerLevel;
-
-        if (currentScore >= nextLevelScore) {
-            gameState.increaseLevel();
-            lastLevelUpScore = nextLevelScore;
-
-            // tampilkan pesan level up
-            showLevelUpMessage = true;
-            levelUpMessageTimer = 120; // tampilkan selama 2 detik (120 frame)
-        }
+        // cek level up
+        checkLevelUp();
 
         // update timer pesan level up
         if (showLevelUpMessage) {
@@ -190,6 +212,10 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         // Score di pojok kiri atas
         g2d.setColor(Color.WHITE);
         g2d.drawString("Score: " + gameState.getScore(), 20, 25);
+
+        // tampilkan waktu
+        g2d.setColor(Color.WHITE);
+        g2d.drawString("Time to next level: " + ((timePerLevel * 1000) - (System.currentTimeMillis() - lastLevelUpTime)) / 1000 + "s", 20, 50);
 
         // Level di tengah atas dengan warna kuning
         g2d.setColor(Color.YELLOW);
@@ -320,6 +346,13 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         laserActive = false;
         laserDuration = 0;
         bulletManager.setLaserMode(false);
+
+        // Reset variabel waktu
+        lastLevelUpTime = System.currentTimeMillis();
+        gameTimer = 0;
+
+        // Reset waktu di GameState
+        gameState.resetTime();
     }
 
     @Override

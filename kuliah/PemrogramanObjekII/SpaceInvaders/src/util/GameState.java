@@ -6,6 +6,8 @@ public class GameState {
     private int level;
     private int highScore;
     private int conqueredArea;
+    private long gameStartTime;
+    private long totalPlayTime;
     private final int maxConqueredArea = 100;
     private boolean gameOver;
     private String gameOverReason; // Tambahkan variabel untuk menyimpan alasan game over
@@ -17,6 +19,8 @@ public class GameState {
         this.highScore = 0;
         this.conqueredArea = 0;
         this.gameOverReason = "";
+        gameStartTime = System.currentTimeMillis();
+        totalPlayTime = 0;
     }
 
     // method untuk mengurangi lives
@@ -116,5 +120,29 @@ public class GameState {
 
     public void setGameOverReason(String reason) {
         this.gameOverReason = reason;
+    }
+
+    public long getGameStartTime() {
+        return gameStartTime;
+    }
+
+    public void updatePlayTime() {
+        totalPlayTime = System.currentTimeMillis() - gameStartTime;
+    }
+
+    public long getTotalPlayTime() {
+        return totalPlayTime;
+    }
+
+    public String getFormattedPlayTime() {
+        long seconds = totalPlayTime / 1000;
+        long minutes = seconds / 60;
+        seconds = seconds % 60;
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    public void resetTime() {
+        gameStartTime = System.currentTimeMillis();
+        totalPlayTime = 0;
     }
 }
