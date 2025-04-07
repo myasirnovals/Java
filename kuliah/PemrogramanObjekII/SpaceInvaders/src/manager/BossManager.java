@@ -44,8 +44,18 @@ public class BossManager {
 
         if (boss.isDead()) {
             bossBattle = false;
-            gameState.setLevel(gameState.getLevel() + 1);
         }
+    }
+
+    public boolean checkBossDefeat(GameState gameState) {
+        if (boss != null && boss.isDead()) {
+            bossBattle = false;
+            boss = null;
+            // Naikkan level ketika boss dikalahkan
+            gameState.setLevel(gameState.getLevel() + 1);
+            return true;
+        }
+        return false;
     }
 
     public void drawBoss(Graphics g) {

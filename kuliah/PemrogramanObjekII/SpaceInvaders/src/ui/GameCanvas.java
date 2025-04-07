@@ -85,24 +85,33 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         // Hitung waktu bermain dalam detik (60 FPS)
         gameTimer++;
 
-        // Cek apakah sudah waktunya naik level
+        // Cek apakah sudah waktunya naik level atau memunculkan boss
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastLevelUpTime >= timePerLevel * 1000) {
-            gameState.increaseLevel();
-            lastLevelUpTime = currentTime;
+        long timeElapsed = currentTime - lastLevelUpTime;
 
-            // tampilkan pesan level up
-            showLevelUpMessage = true;
-            levelUpMessageTimer = 120; // tampilkan selama 2 detik (120 frame)
-
-            // Tingkatkan kesulitan berdasarkan level
-            enemyManager.increaseEnemySpeed(gameState.getLevel());
-            enemyManager.increaseSpawnRate(gameState.getLevel());
-
-            // Setiap 3 level, munculkan boss (jika belum ada)
-            if (gameState.getLevel() % 3 == 0 && !bossManager.isBossBattle()) {
+        // Jika waktu level sudah habis
+        if (timeElapsed >= timePerLevel * 1000) {
+            // Cek apakah level saat ini memerlukan boss (misalnya setiap level genap)
+            if (gameState.getLevel() % 2 == 0 && !bossManager.isBossBattle()) {
+                // Spawn boss ketika timer habis
                 bossManager.spawnBoss(getWidth());
+                // Reset timer tapi tidak naikkan level
+                lastLevelUpTime = currentTime;
             }
+            // Jika bukan level boss, naik level seperti biasa
+            else if (!bossManager.isBossBattle()) {
+                gameState.increaseLevel(); // atau gameState.setLevel(gameState.getLevel() + 1);
+                lastLevelUpTime = currentTime;
+
+                // tampilkan pesan level up
+                showLevelUpMessage = true;
+                levelUpMessageTimer = 120; // tampilkan selama 2 detik (120 frame)
+
+                // Tingkatkan kesulitan berdasarkan level
+                enemyManager.increaseEnemySpeed(gameState.getLevel());
+                enemyManager.increaseSpawnRate(gameState.getLevel());
+            }
+            // Jika ada boss battle yang sedang berlangsung, jangan naikkan level
         }
     }
 
@@ -124,8 +133,6 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         if (gameState.isGameOver()) {
             return;
         }
-
-        // update waktu bermain
 
         // Update player movement
         if (leftPressed) {
@@ -159,13 +166,23 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             }
         }
 
-        if (gameState.getLevel() % 2 == 0 && !bossManager.isBossBattle()) {
-            bossManager.spawnBoss(getWidth());
-        }
-
         // Pastikan boss tidak null sebelum update
         if (bossManager.isBossBattle()) {
             bossManager.updateBoss(bulletManager.getBullets(), gameState, player, getWidth());
+        }
+
+        // Cek apakah boss sudah dikalahkan
+        if (bossManager.checkBossDefeat(gameState)) {
+            // Boss dikalahkan, reset timer untuk level berikutnya
+            lastLevelUpTime = System.currentTimeMillis();
+
+            // Tampilkan pesan level up
+            showLevelUpMessage = true;
+            levelUpMessageTimer = 120; // tampilkan selama 2 detik (120 frame)
+
+            // Tingkatkan kesulitan berdasarkan level baru
+            enemyManager.increaseEnemySpeed(gameState.getLevel());
+            enemyManager.increaseSpawnRate(gameState.getLevel());
         }
 
         // Update shield duration
