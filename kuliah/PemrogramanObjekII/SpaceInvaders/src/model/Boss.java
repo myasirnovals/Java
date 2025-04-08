@@ -72,8 +72,36 @@ public class Boss {
     }
 
     private void shoot() {
-        // Tambahkan peluru baru
-        bullets.add(new BossBullet(x + width / 2 - 5, y + height));
+        switch (bossLevel) {
+            case 2:
+                // Peluru biasa
+                bullets.add(new BossBullet(x + width / 2 - 5, y + height, 0, 5));
+                break;
+            case 4:
+                // Peluru menyebar
+                bullets.add(new BossBullet(x + width / 2 - 5, y + height, -3, 5));
+                bullets.add(new BossBullet(x + width / 2 - 5, y + height, 0, 5));
+                bullets.add(new BossBullet(x + width / 2 - 5, y + height, 3, 5));
+                break;
+            case 6:
+                // Peluru pelacak (contoh sederhana)
+                bullets.add(new BossBullet(x + width / 2 - 5, y + height, 0, 7, true));
+                break;
+            case 8:
+                // Peluru cepat
+                bullets.add(new BossBullet(x + width / 2 - 5, y + height, 0, 10));
+                break;
+            case 10:
+                // Peluru beruntun
+                for (int i = 0; i < 5; i++) {
+                    bullets.add(new BossBullet(x + width / 2 - 5, y + height + (i * 10), 0, 5));
+                }
+                break;
+            default:
+                // Default peluru biasa
+                bullets.add(new BossBullet(x + width / 2 - 5, y + height, 0, 5));
+                break;
+        }
     }
 
     public List<BossBullet> getBullets() {
