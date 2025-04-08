@@ -82,6 +82,10 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     }
 
     private void checkLevelUp() {
+        if (bossManager.isBossBattle()) {
+            return; // Jangan lakukan apa-apa jika boss battle sedang berlangsung
+        }
+
         // Hitung waktu bermain dalam detik (60 FPS)
         gameTimer++;
 
