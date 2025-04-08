@@ -89,21 +89,20 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         long currentTime = System.currentTimeMillis();
         long timeElapsed = currentTime - lastLevelUpTime;
 
-        // Jika waktu level sudah habis
-        if (timeElapsed >= timePerLevel * 1000) {
+        // Jika waktu level sudah habis dan tidak ada boss battle
+        if (timeElapsed >= timePerLevel * 1000 && !bossManager.isBossBattle()) {
             // Cek apakah level saat ini memerlukan boss (misalnya setiap level genap)
-            if (gameState.getLevel() % 2 == 0 && !bossManager.isBossBattle()) {
+            if (gameState.getLevel() % 2 == 0) {
                 // Spawn boss ketika timer habis
                 bossManager.spawnBoss(getWidth());
-                // Reset timer tapi tidak naikkan level
+                // Set waktu level ke 0 karena boss muncul
                 lastLevelUpTime = currentTime;
-            }
-            // Jika bukan level boss, naik level seperti biasa
-            else if (!bossManager.isBossBattle()) {
+            } else {
+                // Jika bukan level boss, naik level seperti biasa
                 gameState.increaseLevel(); // atau gameState.setLevel(gameState.getLevel() + 1);
                 lastLevelUpTime = currentTime;
 
-                // tampilkan pesan level up
+                // Tampilkan pesan level up
                 showLevelUpMessage = true;
                 levelUpMessageTimer = 120; // tampilkan selama 2 detik (120 frame)
 
@@ -111,7 +110,6 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
                 enemyManager.increaseEnemySpeed(gameState.getLevel());
                 enemyManager.increaseSpawnRate(gameState.getLevel());
             }
-            // Jika ada boss battle yang sedang berlangsung, jangan naikkan level
         }
     }
 
@@ -232,9 +230,15 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
 
         // tampilkan waktu
         g2d.setColor(Color.WHITE);
-        long timeRemaining = ((timePerLevel * 1000L) - (System.currentTimeMillis() - lastLevelUpTime)) / 1000;
+        long timeRemaining;
+        if (bossManager.isBossBattle()) {
+            timeRemaining = 0; // Waktu berhenti saat boss muncul
+        } else {
+            timeRemaining = ((timePerLevel * 1000L) - (System.currentTimeMillis() - lastLevelUpTime)) / 1000;
+        }
         timeRemaining = Math.max(timeRemaining, 0); // memastikan waktu tidak negatif
         g2d.drawString("Time to next level: " + timeRemaining + "s", 20, 50);
+
 
         // Level di tengah atas dengan warna kuning
         g2d.setColor(Color.YELLOW);
