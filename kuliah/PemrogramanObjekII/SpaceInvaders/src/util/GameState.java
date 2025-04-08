@@ -37,7 +37,12 @@ public class GameState {
     }
 
     public void increaseLevel() {
-        level++;
+        if (level < 10) { // Pastikan level tidak melebihi 10
+            level++;
+        } else {
+            setGameOver(true); // Jika level sudah maksimal, akhiri permainan
+            setGameOverReason("Maximum Level Reached");
+        }
     }
 
     // Method untuk menambah conquered area

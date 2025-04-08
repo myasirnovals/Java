@@ -102,17 +102,23 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
                 // Set waktu level ke 0 karena boss muncul
                 lastLevelUpTime = currentTime;
             } else {
-                // Jika bukan level boss, naik level seperti biasa
-                gameState.increaseLevel(); // atau gameState.setLevel(gameState.getLevel() + 1);
-                lastLevelUpTime = currentTime;
+                // Jika bukan level boss, cek apakah level masih di bawah 10
+                if (gameState.getLevel() < 10) {
+                    gameState.increaseLevel(); // Naikkan level jika masih di bawah 10
+                    lastLevelUpTime = currentTime;
 
-                // Tampilkan pesan level up
-                showLevelUpMessage = true;
-                levelUpMessageTimer = 120; // tampilkan selama 2 detik (120 frame)
+                    // Tampilkan pesan level up
+                    showLevelUpMessage = true;
+                    levelUpMessageTimer = 120; // tampilkan selama 2 detik (120 frame)
 
-                // Tingkatkan kesulitan berdasarkan level
-                enemyManager.increaseEnemySpeed(gameState.getLevel());
-                enemyManager.increaseSpawnRate(gameState.getLevel());
+                    // Tingkatkan kesulitan berdasarkan level
+                    enemyManager.increaseEnemySpeed(gameState.getLevel());
+                    enemyManager.increaseSpawnRate(gameState.getLevel());
+                } else {
+                    // Jika level sudah 10, akhiri permainan
+                    gameState.setGameOver(true);
+                    gameState.setGameOverReason("You Won!");
+                }
             }
         }
     }
