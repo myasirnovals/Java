@@ -12,12 +12,12 @@ public class Boss {
     private int health;
     private int speedX, speedY;
     private int direction = 1; // 1 untuk kanan, -1 untuk kiri
-    private int bossLevel = 1; // Level Boss
+    private int bossLevel; // Level Boss
     private Image bossSprite;
     private List<BossBullet> bullets; // Daftar peluru boss
     private int shootCooldown; // Cooldown untuk menembak
 
-    public Boss(int x, int y) {
+    public Boss(int x, int y, int bossLevel) { // Tambahkan parameter bossLevel
         this.x = x;
         this.y = y;
         this.width = 150; // Ukuran Boss lebih besar
@@ -27,6 +27,7 @@ public class Boss {
         this.speedY = 2; // Kecepatan vertikal
         this.bullets = new ArrayList<>();
         this.shootCooldown = 0;
+        this.bossLevel = bossLevel; // Simpan level bos
 
         try {
             bossSprite = ImageIO.read(new File("assets/Boss/Shooter_Boss_Sprite_Lv" + this.bossLevel + ".png"));

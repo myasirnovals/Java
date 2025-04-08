@@ -98,7 +98,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             // Cek apakah level saat ini memerlukan boss (misalnya setiap level genap)
             if (gameState.getLevel() % 2 == 0) {
                 // Spawn boss ketika timer habis
-                bossManager.spawnBoss(getWidth());
+                bossManager.spawnBoss(getWidth(), gameState.getLevel());
                 // Set waktu level ke 0 karena boss muncul
                 lastLevelUpTime = currentTime;
             } else {

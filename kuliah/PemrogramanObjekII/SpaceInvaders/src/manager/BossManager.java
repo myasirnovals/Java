@@ -13,8 +13,8 @@ public class BossManager {
     private Boss boss;
     private boolean bossBattle;
 
-    public void spawnBoss(int canvasWidth) {
-        boss = new Boss(canvasWidth / 2 - 50, 50);
+    public void spawnBoss(int canvasWidth, int bossLevel) { // Tambahkan parameter bossLevel
+        boss = new Boss(canvasWidth / 2 - 50, 50, bossLevel); // Teruskan level bos ke konstruktor
         bossBattle = true;
     }
 
