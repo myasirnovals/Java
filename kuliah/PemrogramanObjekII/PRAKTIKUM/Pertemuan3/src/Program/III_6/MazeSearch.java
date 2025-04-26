@@ -1,5 +1,7 @@
 package Program.III_6;
 
+import Program.III_5.Maze;
+
 public class MazeSearch {
     public static void main(String[] args) {
         Maze labyrinth = new Maze();
