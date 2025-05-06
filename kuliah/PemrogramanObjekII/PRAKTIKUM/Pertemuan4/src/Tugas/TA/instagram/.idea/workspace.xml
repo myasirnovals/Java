@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c3528524-044d-4b83-a3fa-b005ba1edac3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../../IV_7/KalkulatorTip/src/main/java/org/unjani/calc/kalkulatortip/TipCalculator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/unjani/ig/instagram/InstagramUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Program/IV_10/demo/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Program/IV_10/demo/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Program/IV_10/demo/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Program/IV_10/demo/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Program/IV_10/demo/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Program/IV_10/demo/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Program/IV_10/demo/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Program/IV_10/demo/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Program/IV_10/demo/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Program/IV_10/demo/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Program/IV_10/demo/src/main/java/module-info.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Program/IV_10/demo/src/main/java/org/todolist/demo/HelloApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Program/IV_10/demo/src/main/java/org/todolist/demo/HelloController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Program/IV_10/demo/src/main/resources/org/todolist/demo/hello-view.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../IV_7/KalkulatorTip/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../IV_7/KalkulatorTip/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../IV_7/KalkulatorTip/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../IV_7/KalkulatorTip/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../IV_7/KalkulatorTip/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../IV_7/KalkulatorTip/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../IV_7/KalkulatorTip/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../IV_7/KalkulatorTip/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../IV_7/KalkulatorTip/src/main/java/module-info.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../IV_7/KalkulatorTip/src/main/java/org/kalkulatortip/kalkulatortip/TipCalculator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../IV_7/KalkulatorTip/src/main/resources/org/kalkulatortip/kalkulatortip/hello-view.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TampilanInstagram/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TampilanInstagram/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TampilanInstagram/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TampilanInstagram/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TampilanInstagram/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TampilanInstagram/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TampilanInstagram/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TampilanInstagram/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TampilanInstagram/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TampilanInstagram/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TampilanInstagram/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TampilanInstagram/src/main/java/module-info.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TampilanInstagram/src/main/java/org/instagramui/tampilaninstagram/InstagramUI.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TampilanInstagram/src/main/resources/org/instagramui/tampilaninstagram/hello-view.fxml" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../../../../../.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
+  <component name="ProjectId" id="2wIofq3wCc52OXN7yesSwfXTxY4" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Application.HelloApplication.executor": "Run",
+    "Application.InstagramUI.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="Application.InstagramUI">
+    <configuration name="HelloApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.unjani.ig.instagram.HelloApplication" />
+      <module name="instagram" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.unjani.ig.instagram.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="InstagramUI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.unjani.ig.instagram.InstagramUI" />
+      <module name="instagram" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.unjani.ig.instagram.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.InstagramUI" />
+        <item itemvalue="Application.HelloApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c3528524-044d-4b83-a3fa-b005ba1edac3" name="Changes" comment="" />
+      <created>1745738556874</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1745738556874</updated>
+      <workItem from="1745738557995" duration="969000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
