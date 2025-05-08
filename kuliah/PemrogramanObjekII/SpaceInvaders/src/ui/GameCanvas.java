@@ -3,6 +3,7 @@ package ui;
 import manager.*;
 import model.Player;
 import util.GameState;
+import util.SoundPlayer;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -407,6 +408,11 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             rightPressed = true;
         } else if (key == KeyEvent.VK_SPACE) {
             bulletManager.addBullet(player.getX() + player.getWidth() / 2 - 2, player.getY());
+            if (laserActive) {
+                SoundPlayer.playSound("assets/SoundTrack/laser_tiga.wav");
+            } else {
+                SoundPlayer.playSound("assets/SoundTrack/laser_player.wav");
+            }
         }
     }
 

@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import ui.ShipSelectionPanel;
+
 public class MainMenu extends JPanel implements ActionListener {
 
     private JButton playButton, instructionsButton, exitButton;
