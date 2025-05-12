@@ -18,7 +18,7 @@ public class MainMenu extends JPanel implements ActionListener {
     private float titleGlowIntensity = 0.0f;
     private boolean glowIncreasing = true;
 
-    // Custom colors
+    // warna dan font untuk elemen UI
     private final Color BUTTON_COLOR = new Color(30, 60, 120);
     private final Color BUTTON_HOVER_COLOR = new Color(60, 100, 200);
     private final Color BUTTON_TEXT_COLOR = new Color(220, 240, 255);
@@ -30,7 +30,7 @@ public class MainMenu extends JPanel implements ActionListener {
         this.gameWindow = gameWindow;
         setLayout(null);
 
-        // Load background image
+        // memuat latar belakang
         try {
             background = ImageIO.read(new File("assets/Background/1747006402495.jpg"));
             System.out.println("Background loaded successfully");
@@ -39,26 +39,26 @@ public class MainMenu extends JPanel implements ActionListener {
             e.printStackTrace();
         }
 
-        // Create glowing title with drop shadow
+        // membuat judul dengan efek bayangan
         titleLabel = new JLabel("SPACE INVADERS");
         titleLabel.setForeground(TITLE_COLOR);
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setBounds(200, 60, 400, 60);
 
-        // Add drop shadow effect to title
+        // menambahkan bayangan ke label judul
         Border empty = BorderFactory.createEmptyBorder();
         titleLabel.setBorder(empty);
         add(titleLabel);
 
-        // Create stylized buttons
+        // membuat tombol dengan efek hover
         playButton = createStyledButton("PLAY", 350, 180);
         instructionsButton = createStyledButton("INSTRUCTIONS", 320, 250);
         exitButton = createStyledButton("EXIT", 350, 320);
 
-        // Start animation timer for title glow effect
+        // memulai animasi judul
         startTitleAnimation();
 
-        // Make the panel opaque to ensure background is visible
+        // membuat panel untuk menampilkan efek bayangan
         setOpaque(true);
     }
 
@@ -130,19 +130,19 @@ public class MainMenu extends JPanel implements ActionListener {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        // Enable antialiasing for smoother rendering
+        // Set anti-aliasing for smoother graphics
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        // Draw the background image
+        // menggambar latar belakang
         if (background != null) {
             g2d.drawImage(background, 0, 0, getWidth(), getHeight(), this);
 
-            // Add a subtle dark overlay for better text visibility
+            // menambahkan overlay gelap
             g2d.setColor(new Color(0, 0, 0, 120));
             g2d.fillRect(0, 0, getWidth(), getHeight());
         } else {
-            // Fallback to a gradient background if image failed to load
+            // fallback untuk latar belakang jika gambar gagal dimuat
             GradientPaint gradient = new GradientPaint(
                     0, 0, new Color(20, 20, 60),
                     0, getHeight(), new Color(5, 5, 30)
@@ -151,17 +151,17 @@ public class MainMenu extends JPanel implements ActionListener {
             g2d.fillRect(0, 0, getWidth(), getHeight());
         }
 
-        // Draw stars in the background
+        // menggambar binta di background
         drawStars(g2d);
 
-        // Draw the title with glow effect
+        // menggambar judul dengan efek glow
         drawGlowingTitle(g2d);
     }
 
     private void drawStars(Graphics2D g2d) {
         g2d.setColor(Color.WHITE);
 
-        // Use current time as seed for star movement
+        // menggunakan waktu sistem untuk membuat efek bintang bergerak
         long time = System.currentTimeMillis() / 100;
 
         for (int i = 0; i < 100; i++) {
@@ -173,17 +173,17 @@ public class MainMenu extends JPanel implements ActionListener {
     }
 
     private void drawGlowingTitle(Graphics2D g2d) {
-        // Get title position from the JLabel
+        // mengambil posisi dan teks dari label judul
         int x = titleLabel.getX();
         int y = titleLabel.getY() + 40; // Adjust for baseline
         String text = "SPACE INVADERS";
 
-        // Draw stronger shadow first for better contrast
+        // menggambar bayangan
         g2d.setColor(new Color(0, 0, 0, 200));
         g2d.setFont(new Font(TITLE_FONT.getName(), TITLE_FONT.getStyle(), TITLE_FONT.getSize()));
-        g2d.drawString(text, x + 4, y + 4); // Thicker shadow
+        g2d.drawString(text, x + 4, y + 4); // ketebalan bayangan
 
-        // Draw a more subtle glow effect
+        // menggambar efek glow
         float alpha = 0.15f + (titleGlowIntensity * 0.3f);
         int glowRadius = 6 + (int)(titleGlowIntensity * 3);
 
@@ -194,14 +194,14 @@ public class MainMenu extends JPanel implements ActionListener {
             g2d.drawString(text, x + i/3, y);
         }
 
-        // Draw white outline for better visibility
+        // menggambar teks dengan efek drop shadow
         g2d.setColor(new Color(255, 255, 255, 220));
         g2d.drawString(text, x-1, y-1);
         g2d.drawString(text, x+1, y-1);
         g2d.drawString(text, x-1, y+1);
         g2d.drawString(text, x+1, y+1);
 
-        // Draw main text in a slightly different color for better contrast
+        // menggambarkan teks utama
         g2d.setColor(new Color(220, 240, 255));
         g2d.drawString(text, x, y);
     }
@@ -209,7 +209,7 @@ public class MainMenu extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == playButton) {
-            // Add transition effect
+            // Menambahkan transisi efek fade out sebelum memulai permainan
             fadeOutTransition(() -> gameWindow.showGame());
         } else if (e.getSource() == instructionsButton) {
             showEnhancedInstructions();
@@ -261,7 +261,7 @@ public class MainMenu extends JPanel implements ActionListener {
     }
 
     private void showEnhancedInstructions() {
-        // Create a custom dialog for instructions
+        // Membuat dialog untuk menampilkan instruksi
         JDialog dialog = new JDialog((Frame)SwingUtilities.getWindowAncestor(this), "Instructions", true);
         dialog.setSize(400, 350);
         dialog.setLocationRelativeTo(this);
@@ -314,7 +314,7 @@ public class MainMenu extends JPanel implements ActionListener {
     }
 
     private void confirmExit() {
-        // Custom confirmation dialog
+        // Meng-kustom dialog untuk konfirmasi keluar
         JDialog dialog = new JDialog((Frame)SwingUtilities.getWindowAncestor(this), "Confirm Exit", true);
         dialog.setSize(300, 150);
         dialog.setLocationRelativeTo(this);
