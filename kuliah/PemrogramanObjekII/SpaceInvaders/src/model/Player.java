@@ -1,9 +1,10 @@
 package model;
 
 import java.awt.*;
+import java.net.URL;
 
 public class Player {
-    private int x, y, width, height, speed;
+    private int x, y, width, height, speed, shipIndex;
     private Image sprite;
 
     public Player(int x, int y, int width, int height, int speed, Image sprite) {
@@ -13,6 +14,27 @@ public class Player {
         this.height = height;
         this.speed = speed;
         this.sprite = sprite;
+    }
+
+    public Player(int shipIndex) {
+        this.shipIndex = shipIndex;
+        this.sprite = loadImageForShip(shipIndex);
+    }
+
+    private Image loadImageForShip(int shipIndex) {
+        String[] imagePaths = {
+                "assets/Character/Ships/ship_0000.png",
+                "assets/Character/Ships/ship_0001.png",
+                "assets/Character/Ships/ship_0002.png",
+                "assets/Character/Ships/ship_0003.png",
+        };
+        URL url = getClass().getResource("/" + imagePaths[shipIndex]);
+        System.out.println("URL: " + url);
+        if (url == null) {
+            System.err.println("Gambar tidak ditemukan: " + imagePaths[shipIndex]);
+            return null;
+        }
+        return Toolkit.getDefaultToolkit().getImage(url);
     }
 
     public void moveLeft() {

@@ -52,7 +52,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         player = new Player(375, 500, 50, 50, 10, playerSprite);
 
         try {
-            background = ImageIO.read(new File("assets/Background/space2_4-frames.png"));
+            background = ImageIO.read(new File("assets/Background/1747005523800.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
