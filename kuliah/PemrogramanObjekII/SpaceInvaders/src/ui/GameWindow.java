@@ -1,5 +1,7 @@
 package ui;
 
+import util.SoundPlayer;
+
 import javax.swing.*;
 
 public class GameWindow extends JFrame {
@@ -21,6 +23,9 @@ public class GameWindow extends JFrame {
     }
 
     public void showGame() {
+        // hentikan musik menu sebelum memulai permainan
+        SoundPlayer.stopBackgroundMusic();
+
         remove(mainMenu);
         gameCanvas = new GameCanvas(this); // tambahkan this
         add(gameCanvas);

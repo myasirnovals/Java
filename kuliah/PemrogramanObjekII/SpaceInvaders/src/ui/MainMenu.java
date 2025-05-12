@@ -1,5 +1,7 @@
 package ui;
 
+import util.SoundPlayer;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -17,6 +19,7 @@ public class MainMenu extends JPanel implements ActionListener {
     private Timer animationTimer;
     private float titleGlowIntensity = 0.0f;
     private boolean glowIncreasing = true;
+    private boolean musicPlaying = false;
 
     // warna dan font untuk elemen UI
     private final Color BUTTON_COLOR = new Color(30, 60, 120);
@@ -60,6 +63,9 @@ public class MainMenu extends JPanel implements ActionListener {
 
         // membuat panel untuk menampilkan efek bayangan
         setOpaque(true);
+
+        // menambahkan menu untuk bgm
+        playMenuBackgroundMusic();
     }
 
     private JButton createStyledButton(String text, int x, int y) {
@@ -349,5 +355,33 @@ public class MainMenu extends JPanel implements ActionListener {
 
         dialog.setContentPane(panel);
         dialog.setVisible(true);
+    }
+
+    private void playMenuBackgroundMusic() {
+        if (!musicPlaying) {
+            SoundPlayer.playBackgroundMusic("assets/SoundTrack/lobby_game.wav");
+        }
+    }
+
+    private void stopMenuBackgroundMusic() {
+        // Menghentikan BGM menu
+        if (musicPlaying) {
+            SoundPlayer.stopBackgroundMusic();
+            musicPlaying = false;
+        }
+    }
+
+    // Tambahkan ini ke method yang menangani tombol "Start Game"
+    private void startGameButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        stopMenuBackgroundMusic(); // Hentikan musik menu
+        // Kode lainnya untuk memulai game
+        gameWindow.showGame();
+    }
+
+    // Method untuk memastikan musik berhenti saat panel tidak ditampilkan
+    @Override
+    public void removeNotify() {
+        stopMenuBackgroundMusic();
+        super.removeNotify();
     }
 }
