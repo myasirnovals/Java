@@ -69,6 +69,8 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         setFocusable(true);
         requestFocus();
         addKeyListener(this);
+
+        playGameBackgroundMusic();
     }
 
     public void activateShield() {
@@ -430,5 +432,15 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
         // Tidak diimplementasikan
+    }
+
+    // Method untuk memainkan musik game
+    private void playGameBackgroundMusic() {
+        SoundPlayer.playBackgroundMusic("assets/SoundTrack/in_game.wav");
+    }
+
+    // Method untuk menghentikan musik game
+    public void stopGameBackgroundMusic() {
+        SoundPlayer.stopBackgroundMusic();
     }
 }

@@ -215,7 +215,7 @@ public class MainMenu extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == playButton) {
-            // Menambahkan transisi efek fade out sebelum memulai permainan
+            stopMenuBackgroundMusic();
             fadeOutTransition(() -> gameWindow.showGame());
         } else if (e.getSource() == instructionsButton) {
             showEnhancedInstructions();

@@ -34,7 +34,10 @@ public class GameWindow extends JFrame {
     }
 
     public void showMainMenu() {
-        remove(gameCanvas);
+        if (gameCanvas != null) {
+            gameCanvas.stopGameBackgroundMusic();
+            remove(gameCanvas);
+        }
         mainMenu = new MainMenu(this);
         add(mainMenu);
         revalidate();
