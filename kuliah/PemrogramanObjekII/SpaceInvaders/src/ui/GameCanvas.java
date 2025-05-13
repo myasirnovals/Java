@@ -26,6 +26,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private boolean leftPressed = false;  // Tambahkan variabel untuk tracking tombol
     private boolean rightPressed = false; // Tambahkan variabel untuk tracking tombol
     private boolean showLevelUpMessage = false; // Flag untuk menampilkan pesan level up
+    private boolean gameOverMusicPlayed = false; // Flag untuk mengecek apakah musik game over sudah dimainkan
     private Image background;
     private Image heartImage;
     private GameWindow gameWindow;
@@ -142,6 +143,12 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private void updateGame() {
         // Jika game over, jangan update game
         if (gameState.isGameOver()) {
+            // Mainkan BGM Game Over hanya sekali
+            if (!gameOverMusicPlayed) {
+                SoundPlayer.stopBackgroundMusic();
+                SoundPlayer.playBackgroundMusicOnce("assets/SoundTrack/game_over.wav");
+                gameOverMusicPlayed = true;
+            }
             return;
         }
 
@@ -211,6 +218,11 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
                 laserActive = false;
                 bulletManager.setLaserMode(false); // Nonaktifkan mode laser
             }
+        }
+
+        // Update game over musik
+        if (gameOverMusicPlayed && !gameState.isGameOver()) {
+            gameOverMusicPlayed = false;
         }
     }
 
@@ -389,6 +401,11 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
 
         // Reset waktu di GameState
         gameState.resetTime();
+
+        // Reset musik game
+        gameOverMusicPlayed = false;
+        SoundPlayer.stopBackgroundMusic();
+        playGameBackgroundMusic();
     }
 
     @Override
