@@ -29,4 +29,8 @@ public class EnemyBullet {
     public int getY() {
         return y;
     }
+
+    public int getX(){
+        return x;
+    }
 }

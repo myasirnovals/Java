@@ -11,6 +11,10 @@ import java.util.Iterator;
 public class BulletManager {
     private ArrayList<Bullet> bullets = new ArrayList<>();
     private boolean laserMode = false;
+    // TODO 1: menambahkan referensi ke EnemyManager
+    private EnemyManager enemyManager;
+
+
 
     public void setLaserMode(boolean laserMode) {
         this.laserMode = laserMode;
@@ -45,6 +49,11 @@ public class BulletManager {
                 Enemy enemy = enemyIterator.next();
 
                 if (bullet.getBounds().intersects(enemy.getBounds())) {
+                    // TODO 2: menambahkan efek ledakan saat peluru mengenai musuh
+                    if(enemyManager != null){
+                        enemyManager.addExplosion(enemy.getX(), enemy.getY());
+                    }
+
                     enemyIterator.remove();
                     // Laser memberikan skor lebih tinggi
                     if (laserMode) {

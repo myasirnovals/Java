@@ -33,17 +33,16 @@ public class MainMenu extends JPanel implements ActionListener {
         this.gameWindow = gameWindow;
         setLayout(null);
 
-        // memuat latar belakang
-        try {
+        // TODO 4: Implementasi efek latar belakang
+        try{
             background = ImageIO.read(new File("assets/Background/1747006402495.jpg"));
-            System.out.println("Background loaded successfully");
+            System.out.println("Background loaded Successfully");
         } catch (IOException e) {
-            System.err.println("Error loading background: " + e.getMessage());
+            System.err.println("Error loading background image: " + e.getMessage());
             e.printStackTrace();
         }
-
         // membuat judul dengan efek bayangan
-        titleLabel = new JLabel("SPACE INVADERS");
+        titleLabel = new JLabel("");
         titleLabel.setForeground(TITLE_COLOR);
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setBounds(200, 60, 400, 60);
@@ -111,17 +110,18 @@ public class MainMenu extends JPanel implements ActionListener {
     }
 
     private void startTitleAnimation() {
-        animationTimer = new Timer(50, new ActionListener() {
+        // TODO 1: Implementasi animasi judul
+        animationTimer = new Timer(50, new ActionListener(){
             @Override
-            public void actionPerformed(ActionEvent e) {
-                if (glowIncreasing) {
+            public void actionPerformed(ActionEvent e){
+                if (glowIncreasing){
                     titleGlowIntensity += 0.05f;
                     if (titleGlowIntensity >= 1.0f) {
                         glowIncreasing = false;
                     }
-                } else {
+                }else{
                     titleGlowIntensity -= 0.05f;
-                    if (titleGlowIntensity <= 0.0f) {
+                    if(titleGlowIntensity <= 0.0f){
                         glowIncreasing = true;
                     }
                 }
@@ -133,50 +133,42 @@ public class MainMenu extends JPanel implements ActionListener {
 
     @Override
     protected void paintComponent(Graphics g) {
+        // TODO 3: Implementasi efek bayangan pada judul
         super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
+            Graphics2D g2d = (Graphics2D) g;
 
-        // Set anti-aliasing for smoother graphics
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        // menggambar latar belakang
-        if (background != null) {
-            g2d.drawImage(background, 0, 0, getWidth(), getHeight(), this);
+            if(background != null){
+                g2d.drawImage(background, 0, 0, getWidth(), getHeight(), this);
 
-            // menambahkan overlay gelap
-            g2d.setColor(new Color(0, 0, 0, 120));
-            g2d.fillRect(0, 0, getWidth(), getHeight());
-        } else {
-            // fallback untuk latar belakang jika gambar gagal dimuat
-            GradientPaint gradient = new GradientPaint(
-                    0, 0, new Color(20, 20, 60),
-                    0, getHeight(), new Color(5, 5, 30)
-            );
-            g2d.setPaint(gradient);
-            g2d.fillRect(0, 0, getWidth(), getHeight());
-        }
+                g2d.setColor(new Color(0,0,0,120));
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }else{
+                GradientPaint gradient = new GradientPaint(0, 0, new Color(20, 20, 60), 0, getHeight(), new Color(5, 5, 30));
 
-        // menggambar binta di background
-        drawStars(g2d);
+                g2d.setPaint(gradient);
+                g2d.fillRect(0,0, getWidth(),getHeight());
+            }
 
-        // menggambar judul dengan efek glow
-        drawGlowingTitle(g2d);
+            drawStars(g2d);
+            drawGlowingTitle(g2d);
     }
 
     private void drawStars(Graphics2D g2d) {
+        // TODO 2: Implementasi efek bintang bergerak
         g2d.setColor(Color.WHITE);
 
-        // menggunakan waktu sistem untuk membuat efek bintang bergerak
         long time = System.currentTimeMillis() / 100;
 
-        for (int i = 0; i < 100; i++) {
+        for(int i = 0; i < 100; i++){
             int x = (int)(Math.sin(i * 13 + time * 0.01) * getWidth() + getWidth()) % getWidth();
             int y = (int)(Math.cos(i * 7 + time * 0.01) * getHeight() + getHeight()) % getHeight();
             int size = i % 3 + 1;
             g2d.fillOval(x, y, size, size);
         }
-    }
+     }
 
     private void drawGlowingTitle(Graphics2D g2d) {
         // mengambil posisi dan teks dari label judul

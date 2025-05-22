@@ -24,47 +24,49 @@ public class SoundPlayer {
         }
     }
 
-    // Method baru untuk memainkan background music dengan looping
+    // TODO 2: Method baru untuk memainkan background music dengan looping
     public static void playBackgroundMusic(String filePath) {
-        stopBackgroundMusic(); // Hentikan musik yang sedang diputar (jika ada)
+        stopBackgroundMusic();
 
-        try {
-            File musicFile = new File(filePath);
-            if (!musicFile.exists()){
-                System.err.print("Music file not found: " + filePath);
-                return;
+            try{
+                File musicFile = new File(filePath);
+                if(!musicFile.exists()){
+                    System.err.print("Music file not found" + filePath);
+                    return;
+                }
+
+                AudioInputStream audioIn = AudioSystem.getAudioInputStream(musicFile);
+                backgroundMusic = AudioSystem.getClip();
+                backgroundMusic.open(audioIn);
+
+                backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
+                backgroundMusic.start();
+            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+                e.printStackTrace();
             }
-
-            AudioInputStream audioIn = AudioSystem.getAudioInputStream(musicFile);
-            backgroundMusic = AudioSystem.getClip();
-            backgroundMusic.open(audioIn);
-            backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY); // Looping terus menerus
-            backgroundMusic.start();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e){
-            e.printStackTrace();
-        }
     }
 
-    // Untuk memainkan BGM hanya sekali (tanpa loop)
+    // TODO 3: Untuk memainkan BGM hanya sekali (tanpa loop)
     public static void playBackgroundMusicOnce(String filePath) {
-        stopBackgroundMusic(); // Hentikan musik yang sedang diputar (jika ada)
-        try {
-            File musicFile = new File(filePath);
-            if (!musicFile.exists()){
-                System.err.print("Music file not found: " + filePath);
-                return;
+        stopBackgroundMusic();
+            try{
+                File musicFile = new File(filePath);
+                if(!musicFile.exists()){
+                    System.err.print("Music file not found" + filePath);
+                    return;
+                }
+
+                AudioInputStream audioIn = AudioSystem.getAudioInputStream(musicFile);
+                backgroundMusic = AudioSystem.getClip();
+                backgroundMusic.open(audioIn);
+                backgroundMusic.start();
+            }catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+                e.printStackTrace();
             }
 
-            AudioInputStream audioIn = AudioSystem.getAudioInputStream(musicFile);
-            backgroundMusic = AudioSystem.getClip();
-            backgroundMusic.open(audioIn);
-            backgroundMusic.start(); // Tidak pakai loop
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e){
-            e.printStackTrace();
-        }
     }
 
-    // Method untuk menghentikan background music
+    // TODO 1: Method untuk menghentikan background music
     public static void stopBackgroundMusic() {
         if (backgroundMusic != null && backgroundMusic.isRunning()) {
             backgroundMusic.stop();
