@@ -73,11 +73,11 @@ public class BossManager {
                     int offsetX = (int) (Math.random() * boss.getWidth());
                     int offsetY = (int) (Math.random() * boss.getHeight());
 
-                    explosionManager.addExplosion(boss.getX() + offsetX, boss.getY() + offsetY);
+                    explosionManager.addBossExplosion(boss.getX() + offsetX, boss.getY() + offsetY, 70, 70);
                 }
 
                 //Tambahkan ledakan besar di tengah boss
-                explosionManager.addExplosion(boss.getX() + boss.getWidth()/2, boss.getY() + boss.getHeight()/2);
+                explosionManager.addBossExplosion(boss.getX() + boss.getWidth()/2 -100, boss.getY() + boss.getHeight()/2 -100, 200, 200);
             }
 
 

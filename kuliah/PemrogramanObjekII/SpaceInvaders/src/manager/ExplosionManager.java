@@ -10,7 +10,15 @@ public class ExplosionManager {
     private ArrayList<ExplosionEffect> explosions = new ArrayList<>();
 
     public void addExplosion(int x, int y) {
-        explosions.add(new ExplosionEffect(x, y));
+        explosions.add(new ExplosionEffect( x, y, "bullet"));
+    }
+
+    public void addBossExplosion(int x, int y){
+        explosions.add(new ExplosionEffect(x, y, "boss", 100, 100));
+    }
+
+    public void addBossExplosion(int x, int y, int width, int height){
+        explosions.add(new ExplosionEffect(x, y, "boss", width, height));
     }
 
     public void update(){
