@@ -13,15 +13,21 @@ import java.util.Iterator;
 public class EnemyManager {
     private ArrayList<Enemy> enemies = new ArrayList<>();
     private ArrayList<EnemyBullet> enemyBullets = new ArrayList<>();
-    // TODO 1: menambahkan variabel untuk efek ledakan
-    private ArrayList <ExplosionEffect> explosions = new ArrayList<>();
+    // TODO 1: menambahkan atribut explosionManager
+    private ExplosionManager explosionManager;
 
     private int spawnTimer = 0;
     private int spawnInterval = 100; // Interval awal untuk spawn musuh
 
-    // TODO 2: menambahkan metode untuk efek ledakan
-    public void addExplosion (int x, int y){
-        explosions.add(new ExplosionEffect(x,y));
+    // TODO 2: Setter untuk ExplosionManager
+    public void setExplosionManager(ExplosionManager explosionManager){
+        this.explosionManager = explosionManager;
+    }
+
+    public void addExplosion(int x, int y){
+        if (explosionManager != null){
+            explosionManager.addExplosion(x, y);
+        }
     }
 
     public void increaseEnemySpeed(int level) {
@@ -65,7 +71,9 @@ public class EnemyManager {
 
             if (enemy.getBounds().intersects(playerBounds)) {
                 // TODO 3: menambahkan efek ledakan saat terjadi tabrakan dengan pemain
-                addExplosion(enemy.getX(), enemy.getY());
+                if (explosionManager != null) {
+                    explosionManager.addExplosion(enemy.getX(), enemy.getY());
+                }
 
                 enemies.remove(i);
                 i--;
@@ -89,7 +97,9 @@ public class EnemyManager {
 
             if (bullet.getBounds().intersects(playerBounds)) {
                 // TODO 4: menambahkan efek ledakan saat peluru mengenai pemain
-                addExplosion(bullet.getX() - 25, bullet.getY() - 25);
+                if (explosionManager != null){
+                    explosionManager.addExplosion(bullet.getX() - 25, bullet.getY() - 25);
+                }
 
                 enemyBullets.remove(i);
                 i--;
@@ -98,17 +108,6 @@ public class EnemyManager {
                 }
             }
         }
-
-        // TODO 5: menambahkan logika untuk efek ledakan
-        Iterator<ExplosionEffect>iterator = explosions.iterator();
-        while(iterator.hasNext()){
-            ExplosionEffect explosion = iterator.next();
-            explosion.update();
-            if(!explosion.isActive()){
-                iterator.remove();
-            }
-        }
-
     }
 
     public void drawEnemies(Graphics g) {
@@ -120,11 +119,6 @@ public class EnemyManager {
 
         for (EnemyBullet bullet : enemyBullets) {
             bullet.draw(g);
-        }
-
-        // TODO 6: menggambar efek ledakan
-        for(ExplosionEffect explosion :explosions){
-            explosion.draw(g);
         }
     }
 

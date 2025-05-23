@@ -11,8 +11,12 @@ import java.util.Iterator;
 public class BulletManager {
     private ArrayList<Bullet> bullets = new ArrayList<>();
     private boolean laserMode = false;
-    // TODO 1: menambahkan referensi ke EnemyManager
-    private EnemyManager enemyManager;
+    // TODO 1: menambahkan attribute explosionManager
+    private ExplosionManager explosionManager;
+
+    public void setExplosionManager(ExplosionManager explosionManager){
+        this.explosionManager = explosionManager;
+    }
 
     public void setLaserMode(boolean laserMode) {
         this.laserMode = laserMode;
@@ -48,8 +52,8 @@ public class BulletManager {
 
                 if (bullet.getBounds().intersects(enemy.getBounds())) {
                     // TODO 2: menambahkan efek ledakan saat peluru mengenai musuh
-                    if (enemyManager != null) {
-                        enemyManager.addExplosion(enemy.getX(), enemy.getY());
+                    if (explosionManager != null) {
+                        explosionManager.addExplosion(enemy.getX(), enemy.getY());
                     }
 
                     enemyIterator.remove();

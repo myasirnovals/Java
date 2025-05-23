@@ -30,6 +30,8 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private Image background;
     private Image heartImage;
     private GameWindow gameWindow;
+    // TODO 1: menambahkan attribute explosionManager
+    private ExplosionManager explosionManager;
 
     private final GameState gameState;
     private final Player player;
@@ -48,6 +50,13 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         enemyManager = new EnemyManager();
         powerUpManager = new PowerUpManager();
         bossManager = new BossManager();
+
+        // TODO 2: menambahkan exeplosion efek
+        explosionManager = new ExplosionManager();
+
+        bulletManager.setExplosionManager(explosionManager);
+        enemyManager.setExplosionManager(explosionManager);
+        bossManager.setExplosionManager(explosionManager);
 
         Image playerSprite = Toolkit.getDefaultToolkit().getImage("assets/Character/Ships/ship_0000.png");
         player = new Player(375, 500, 50, 50, 10, playerSprite);
@@ -152,6 +161,9 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
             return;
         }
 
+        // TODO 3: mengupdate efek ledakan
+        explosionManager.update();
+
         // Update player movement
         if (leftPressed) {
             player.moveLeft();
@@ -233,6 +245,10 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
 
         // Gambar background
         g2d.drawImage(background, 0, 0, getWidth(), getHeight(), this);
+
+        // TODO 4: menggambar efek ledakan
+        explosionManager.draw(g);
+
 
         // Gambar entitas game (player, bullets, enemies, dll)
         player.draw(g2d);
@@ -372,6 +388,9 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         gameState.setConqueredArea(0);
         gameState.setGameOver(false);
         gameState.setGameOverReason("");
+
+        // TODO 5: reset efek ledakan
+        explosionManager.reset();
 
         // Reset variabel level up
         lastLevelUpScore = 0;

@@ -119,4 +119,20 @@ public class Boss {
     public Rectangle getBounds() {
         return new Rectangle(x, y, width, height);
     }
+
+    public int getY(){
+        return y;
+    }
+
+    public int getX(){
+        return x;
+    }
+
+    public int getWidth(){
+        return width;
+    }
+
+    public int getHeight(){
+        return height;
+    }
 }
