@@ -13,7 +13,7 @@ public class ExplosionEffect {
     public ExplosionEffect(int x, int y){
         this.x = x;
         this.y = y;
-        this.explosionGif = new ImageIcon("assets/Effect/enemyExplosive.gif");
+        this.explosionGif = new ImageIcon("assets/Effect/bulletExplosive.gif");
     }
     public void update() {
         currentFrame++;

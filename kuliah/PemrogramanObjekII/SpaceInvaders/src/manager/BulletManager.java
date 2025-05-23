@@ -14,8 +14,6 @@ public class BulletManager {
     // TODO 1: menambahkan referensi ke EnemyManager
     private EnemyManager enemyManager;
 
-
-
     public void setLaserMode(boolean laserMode) {
         this.laserMode = laserMode;
     }
@@ -50,7 +48,7 @@ public class BulletManager {
 
                 if (bullet.getBounds().intersects(enemy.getBounds())) {
                     // TODO 2: menambahkan efek ledakan saat peluru mengenai musuh
-                    if(enemyManager != null){
+                    if (enemyManager != null) {
                         enemyManager.addExplosion(enemy.getX(), enemy.getY());
                     }
 
