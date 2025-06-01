@@ -14,7 +14,7 @@ public class EnemyBullet {
     }
 
     public void move() {
-        y += speed; // Bergerak ke bawah
+        y += speed;
     }
 
     public void draw(Graphics g) {
@@ -30,7 +30,7 @@ public class EnemyBullet {
         return y;
     }
 
-    public int getX(){
+    public int getX() {
         return x;
     }
 }

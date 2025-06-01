@@ -11,7 +11,7 @@ public class SoundPlayer {
     public static void playSound(String filePath) {
         try {
             File soundFile = new File(filePath);
-            if (!soundFile.exists()){
+            if (!soundFile.exists()) {
                 System.err.print("Sound file not found" + filePath);
                 return;
             }
@@ -19,7 +19,7 @@ public class SoundPlayer {
             Clip clip = AudioSystem.getClip();
             clip.open(audioIn);
             clip.start();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e){
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
     }
@@ -30,9 +30,9 @@ public class SoundPlayer {
         }
         stopBackgroundMusic();
 
-        try{
+        try {
             File musicFile = new File(filePath);
-            if(!musicFile.exists()){
+            if (!musicFile.exists()) {
                 System.err.print("Music file not found" + filePath);
                 return;
             }
@@ -52,9 +52,9 @@ public class SoundPlayer {
 
     public static void playBackgroundMusicOnce(String filePath) {
         stopBackgroundMusic();
-        try{
+        try {
             File musicFile = new File(filePath);
-            if(!musicFile.exists()){
+            if (!musicFile.exists()) {
                 System.err.print("Music file not found" + filePath);
                 return;
             }
@@ -65,7 +65,7 @@ public class SoundPlayer {
             backgroundMusic.start();
 
             currentMusicPath = filePath;
-        }catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
     }

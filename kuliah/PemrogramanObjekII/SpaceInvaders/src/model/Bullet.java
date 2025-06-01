@@ -8,7 +8,7 @@ public class Bullet {
     private final int speed;
     private Color color;
 
-    // Constructor dengan parameter tambahan untuk mendukung berbagai jenis peluru
+
     public Bullet(int x, int y, int width, int height, Color color) {
         this.x = x;
         this.y = y;
@@ -18,7 +18,7 @@ public class Bullet {
         this.speed = 15;
     }
 
-    // Constructor default untuk kompatibilitas mundur
+
     public Bullet(int x, int y) {
         this.x = x;
         this.y = y;
@@ -29,7 +29,7 @@ public class Bullet {
     }
 
     public void move() {
-        y -= speed; // Gerakkan peluru ke atas
+        y -= speed;
     }
 
     public void draw(Graphics g) {

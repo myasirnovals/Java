@@ -13,12 +13,12 @@ public class PowerUpManager {
 
     public void spawnPowerUp(int canvasWidth) {
         spawnTimer++;
-        if (spawnTimer >= 300) { // Spawn setiap 300 frame
-            int x = (int) (Math.random() * (canvasWidth - 30)); // Posisi acak
+        if (spawnTimer >= 300) {
+            int x = (int) (Math.random() * (canvasWidth - 30));
             String[] types = {"life", "shield", "laser"};
             String type = types[(int) (Math.random() * types.length)];
             powerUps.add(new PowerUp(x, 0, type));
-            spawnTimer = 0; // Reset timer
+            spawnTimer = 0;
         }
     }
 
@@ -27,14 +27,12 @@ public class PowerUpManager {
             PowerUp powerUp = powerUps.get(i);
             powerUp.move();
 
-            // Hapus power-up jika keluar dari layar
             if (!powerUp.isVisible()) {
                 powerUps.remove(i);
                 i--;
                 continue;
             }
 
-            // Deteksi tabrakan dengan pemain
             if (powerUp.getBounds().intersects(playerBounds)) {
                 switch (powerUp.getType()) {
                     case "life":

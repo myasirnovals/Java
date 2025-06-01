@@ -14,41 +14,37 @@ import java.util.Iterator;
 public class EnemyManager {
     private ArrayList<Enemy> enemies = new ArrayList<>();
     private ArrayList<EnemyBullet> enemyBullets = new ArrayList<>();
-    // TODO 1: menambahkan atribut explosionManager
     private ExplosionManager explosionManager;
 
     private int spawnTimer = 0;
-    private int spawnInterval = 100; // Interval awal untuk spawn musuh
+    private int spawnInterval = 100;
 
-    // TODO 2: Setter untuk ExplosionManager
-    public void setExplosionManager(ExplosionManager explosionManager){
+    public void setExplosionManager(ExplosionManager explosionManager) {
         this.explosionManager = explosionManager;
     }
 
-    public void addExplosion(int x, int y){
-        if (explosionManager != null){
+    public void addExplosion(int x, int y) {
+        if (explosionManager != null) {
             explosionManager.addExplosion(x, y);
         }
     }
 
     public void increaseEnemySpeed(int level) {
-        // Tingkatkan kecepatan musuh yang sudah ada
         for (Enemy enemy : enemies) {
-            enemy.increaseSpeed(1); // Tambah kecepatan sebanyak 1
+            enemy.increaseSpeed(1);
         }
     }
 
     public void increaseSpawnRate(int level) {
-        // Kurangi interval spawn berdasarkan level (semakin kecil interval, semakin cepat spawn)
-        spawnInterval = Math.max(30, 100 - (level * 10)); // Minimal interval 30
+        spawnInterval = Math.max(30, 100 - (level * 10));
     }
 
     public void spawnEnemy(int canvasWidth) {
         spawnTimer++;
         if (spawnTimer >= spawnInterval) {
-            int enemyWidth = 50; // sesuaikan dengan ukuran enemy kamu
+            int enemyWidth = 50;
             int x = (int) (Math.random() * (canvasWidth - enemyWidth));
-            x = Math.max(x, 0); // memastikan posisi enemy tidak negatif
+            x = Math.max(x, 0);
             enemies.add(new Enemy(x, 0, enemyWidth, 50, 3, "default"));
             spawnTimer = 0;
         }
@@ -59,8 +55,7 @@ public class EnemyManager {
             Enemy enemy = enemies.get(i);
             enemy.move();
 
-            if (enemy.isShooting() && Math.random() < 0.02) { // Peluang menembak acak
-                // TODO 7: menambahkan suara peluru musuh
+            if (enemy.isShooting() && Math.random() < 0.02) {
                 enemyBullets.add(new EnemyBullet(enemy.getX() + enemy.getWidth() / 2, enemy.getY() + enemy.getHeight()));
                 SoundPlayer.playSound("assets/SoundTrack/enemy_shot.wav");
             }
@@ -73,7 +68,6 @@ public class EnemyManager {
             }
 
             if (enemy.getBounds().intersects(playerBounds)) {
-                // TODO 3: menambahkan efek ledakan saat terjadi tabrakan dengan pemain
                 if (explosionManager != null) {
                     explosionManager.addExplosion(enemy.getX(), enemy.getY());
                 }
@@ -82,7 +76,6 @@ public class EnemyManager {
                     gameState.decreaseLives();
                 }
 
-                // TODO 6: menambahkan suara ledakan saat terjadi tabrakan dengan pemain
                 SoundPlayer.playSound("assets/SoundTrack/explosive.wav");
                 enemies.remove(i);
                 i--;
@@ -90,7 +83,6 @@ public class EnemyManager {
             }
         }
 
-        // Update peluru musuh
         for (int i = 0; i < enemyBullets.size(); i++) {
             EnemyBullet bullet = enemyBullets.get(i);
             bullet.move();
@@ -102,8 +94,7 @@ public class EnemyManager {
             }
 
             if (bullet.getBounds().intersects(playerBounds)) {
-                // TODO 4: menambahkan efek ledakan saat peluru mengenai pemain
-                if (explosionManager != null){
+                if (explosionManager != null) {
                     explosionManager.addExplosion(bullet.getX() - 25, bullet.getY() - 25);
                 }
 
@@ -111,7 +102,6 @@ public class EnemyManager {
                     gameState.decreaseLives();
                 }
 
-                // TODO 5: tambahakan suara ledakan saat peluru mengenai pemain
                 SoundPlayer.playSound("assets/SoundTrack/explosive.wav");
                 enemyBullets.remove(i);
                 i--;

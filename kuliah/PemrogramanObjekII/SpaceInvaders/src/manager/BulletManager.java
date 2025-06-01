@@ -12,10 +12,9 @@ import java.util.Iterator;
 public class BulletManager {
     private ArrayList<Bullet> bullets = new ArrayList<>();
     private boolean laserMode = false;
-    // TODO 1: menambahkan attribute explosionManager
     private ExplosionManager explosionManager;
 
-    public void setExplosionManager(ExplosionManager explosionManager){
+    public void setExplosionManager(ExplosionManager explosionManager) {
         this.explosionManager = explosionManager;
     }
 
@@ -25,7 +24,6 @@ public class BulletManager {
 
     public void addBullet(int x, int y) {
         if (laserMode) {
-            // Tembakkan 3 peluru saat laser aktif
             bullets.add(new Bullet(x, y, 5, 15, Color.RED));
             bullets.add(new Bullet(x - 10, y, 5, 15, Color.RED));
             bullets.add(new Bullet(x + 10, y, 5, 15, Color.RED));
@@ -52,17 +50,14 @@ public class BulletManager {
                 Enemy enemy = enemyIterator.next();
 
                 if (bullet.getBounds().intersects(enemy.getBounds())) {
-                    // TODO 2: menambahkan efek ledakan saat peluru mengenai musuh
                     if (explosionManager != null) {
-                        // TODO 3: menambahkan suara ledakan saat peluru mengenai musuh
                         explosionManager.addExplosion(enemy.getX(), enemy.getY());
                         SoundPlayer.playSound("assets/SoundTrack/explosive.wav");
                     }
 
                     enemyIterator.remove();
-                    // Laser memberikan skor lebih tinggi
                     if (laserMode) {
-                        gameState.setScore(gameState.getScore() + 15); // Bonus skor untuk laser
+                        gameState.setScore(gameState.getScore() + 15);
                     } else {
                         gameState.setScore(gameState.getScore() + 10);
                     }

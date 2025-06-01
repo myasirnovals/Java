@@ -13,16 +13,14 @@ import java.util.List;
 public class BossManager {
     private Boss boss;
     private boolean bossBattle;
-    // TODO 1: menambahkan atribut explosionManager
     private ExplosionManager explosionManager;
 
-    // TODO 2: Setter untuk ExplosionManager
     public void setExplosionManager(ExplosionManager explosionManager) {
         this.explosionManager = explosionManager;
     }
 
-    public void spawnBoss(int canvasWidth, int bossLevel) { // Tambahkan parameter bossLevel
-        boss = new Boss(canvasWidth / 2 - 50, 50, bossLevel); // Teruskan level bos ke konstruktor
+    public void spawnBoss(int canvasWidth, int bossLevel) {
+        boss = new Boss(canvasWidth / 2 - 50, 50, bossLevel);
         bossBattle = true;
     }
 
@@ -31,12 +29,9 @@ public class BossManager {
 
         boss.update(canvasWidth);
 
-        // Cek peluru pemain mengenai boss
         bullets.removeIf(bullet -> {
             if (boss.getBounds().intersects(bullet.getBounds())) {
-                // TODO 3: menambahkan efek ledakan saat peluru mengenai boss
-                if(explosionManager != null){
-                    // TODO 6: menambahkan suara ledakan saat peluru mengenai bos
+                if (explosionManager != null) {
                     SoundPlayer.playSound("assets/SoundTrack/explosive.wav");
                     explosionManager.addExplosion(bullet.getX(), bullet.getY());
                 }
@@ -47,18 +42,15 @@ public class BossManager {
             return false;
         });
 
-        // Cek peluru boss mengenai pemain
         List<BossBullet> bossBullets = boss.getBullets();
         bossBullets.removeIf(bossBullet -> {
             if (bossBullet.getBounds().intersects(player.getBounds())) {
-                // TODO 4: menambahkan efek ledakan saat peluru boss mengenai pemain
-                if(explosionManager != null){
-                    // TODO 7: menambahkan suara ledakan saat peluru boss mengenai pemain
+                if (explosionManager != null) {
                     SoundPlayer.playSound("assets/SoundTrack/explosive.wav");
-                    explosionManager.addExplosion(player.getX() + player.getWidth()/2, player.getY() + player.getHeight()/2);
+                    explosionManager.addExplosion(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2);
                 }
 
-                gameState.setLives(gameState.getLives() - 1); // Kurangi nyawa pemain
+                gameState.setLives(gameState.getLives() - 1);
                 return true;
             }
             return false;
@@ -71,9 +63,7 @@ public class BossManager {
 
     public boolean checkBossDefeat(GameState gameState) {
         if (boss != null && boss.isDead()) {
-            // TODO 5: menambahkan efek ledakan saat boss dikalahkan
-            if(explosionManager != null){
-                //Tambahkan beberapa ledakan untuk efek yang lebih dramatis
+            if (explosionManager != null) {
                 for (int i = 0; i < 5; i++) {
                     int offsetX = (int) (Math.random() * boss.getWidth());
                     int offsetY = (int) (Math.random() * boss.getHeight());
@@ -81,16 +71,13 @@ public class BossManager {
                     explosionManager.addBossExplosion(boss.getX() + offsetX, boss.getY() + offsetY, 70, 70);
                 }
 
-                //Tambahkan ledakan besar di tengah boss
-                // TODO 8: menambahkan suara ledakan besar saat boss dikalahkan
                 SoundPlayer.playSound("assets/SoundTrack/boss_explosive.wav");
-                explosionManager.addBossExplosion(boss.getX() + boss.getWidth()/2 -100, boss.getY() + boss.getHeight()/2 -100, 200, 200);
+                explosionManager.addBossExplosion(boss.getX() + boss.getWidth() / 2 - 100, boss.getY() + boss.getHeight() / 2 - 100, 200, 200);
             }
 
 
             bossBattle = false;
             boss = null;
-            // Naikkan level ketika boss dikalahkan
             gameState.setLevel(gameState.getLevel() + 1);
             return true;
         }

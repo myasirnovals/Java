@@ -23,11 +23,10 @@ public class GameWindow extends JFrame {
     }
 
     public void showGame() {
-        // hentikan musik menu sebelum memulai permainan
         SoundPlayer.stopBackgroundMusic();
 
         remove(mainMenu);
-        gameCanvas = new GameCanvas(this); // tambahkan this
+        gameCanvas = new GameCanvas(this);
         add(gameCanvas);
         revalidate();
         gameCanvas.requestFocusInWindow();

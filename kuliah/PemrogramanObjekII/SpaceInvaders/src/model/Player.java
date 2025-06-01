@@ -22,12 +22,7 @@ public class Player {
     }
 
     private Image loadImageForShip(int shipIndex) {
-        String[] imagePaths = {
-                "assets/Character/Ships/ship_0000.png",
-                "assets/Character/Ships/ship_0001.png",
-                "assets/Character/Ships/ship_0002.png",
-                "assets/Character/Ships/ship_0003.png",
-        };
+        String[] imagePaths = {"assets/Character/Ships/ship_0000.png", "assets/Character/Ships/ship_0001.png", "assets/Character/Ships/ship_0002.png", "assets/Character/Ships/ship_0003.png",};
         URL url = getClass().getResource("/" + imagePaths[shipIndex]);
         System.out.println("URL: " + url);
         if (url == null) {

@@ -7,18 +7,18 @@ import java.io.IOException;
 
 public class PowerUp {
     private int x, y;
-    private final int width = 50, height = 50; // Ukuran power-up
-    private final int speed = 3; // Kecepatan power-up
+    private final int width = 50, height = 50;
+    private final int speed = 3;
     private boolean visible = true;
-    private String type; // Tipe power-up (misalnya "life", "shield", "laser")
-    private Image image; // Gambar power-up
+    private String type;
+    private Image image;
 
     public PowerUp(int x, int y, String type) {
         this.x = x;
         this.y = y;
         this.type = type;
 
-        // muat gambar sesuai tipe
+
         try {
             switch (type) {
                 case "life":
@@ -31,7 +31,7 @@ public class PowerUp {
                     this.image = ImageIO.read(new File("assets/Skill/laser_up.png"));
                     break;
                 default:
-                    this.image = null; // Gambar default jika tipe tidak dikenali
+                    this.image = null;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -39,8 +39,8 @@ public class PowerUp {
     }
 
     public void move() {
-        y += speed; // Gerakkan power-up ke bawah
-        if (y > 600) { // Hilangkan jika keluar layar
+        y += speed;
+        if (y > 600) {
             visible = false;
         }
     }
@@ -48,11 +48,11 @@ public class PowerUp {
     public void draw(Graphics g) {
         if (!visible) return;
 
-        // gambar power-up
+
         if (image != null) {
             g.drawImage(image, x, y, width, height, null);
         } else {
-            g.setColor(Color.YELLOW); // Gambar default jika gambar tidak ada
+            g.setColor(Color.YELLOW);
             g.fillRect(x, y, width, height);
         }
     }

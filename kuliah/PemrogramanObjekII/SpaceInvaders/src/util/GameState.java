@@ -10,7 +10,7 @@ public class GameState {
     private long totalPlayTime;
     private final int maxConqueredArea = 100;
     private boolean gameOver;
-    private String gameOverReason; // Tambahkan variabel untuk menyimpan alasan game over
+    private String gameOverReason;
 
     public GameState() {
         this.score = 0;
@@ -23,13 +23,10 @@ public class GameState {
         totalPlayTime = 0;
     }
 
-    // method untuk mengurangi lives
     public void decreaseLives() {
         if (lives > 0) {
             lives--;
         }
-
-        // jika lives habis, set gameOver menjadi true
         if (lives == 0) {
             setGameOver(true);
             setGameOverReason("No Lives Left");
@@ -37,15 +34,15 @@ public class GameState {
     }
 
     public void increaseLevel() {
-        if (level < 10) { // Pastikan level tidak melebihi 10
+        if (level < 10) {
             level++;
         } else {
-            setGameOver(true); // Jika level sudah maksimal, akhiri permainan
+            setGameOver(true);
             setGameOverReason("Maximum Level Reached");
         }
     }
 
-    // Method untuk menambah conquered area
+
     public void increaseConqueredArea(int amount) {
         conqueredArea += amount;
         if (conqueredArea >= maxConqueredArea) {
@@ -61,7 +58,7 @@ public class GameState {
 
     public void setScore(int score) {
         this.score = score;
-        // Update high score jika score saat ini lebih tinggi
+
         if (score > highScore) {
             highScore = score;
         }

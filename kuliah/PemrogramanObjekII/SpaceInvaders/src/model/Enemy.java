@@ -9,11 +9,11 @@ public class Enemy {
     private int x, y;
     private int width, height;
     private int speed;
-    private String movementPattern; // Pola gerakan musuh
+    private String movementPattern;
     private boolean shooting = false;
-    private int shootTimer = 300; // 5 detik (300 frame pada 60fps)
-    private String state = "movingDown"; // movingDown -> shooting -> continueDown
-    private Image sprite; // Gambar musuh
+    private int shootTimer = 300;
+    private String state = "movingDown";
+    private Image sprite;
 
     public Enemy(int x, int y, int width, int height, int speed, String movementPattern) {
         this.x = x;
@@ -23,7 +23,6 @@ public class Enemy {
         this.speed = speed;
         this.movementPattern = movementPattern;
 
-        // muat gambar musuh
         try {
             this.sprite = ImageIO.read(new File("assets/Musuh/enemy1.png"));
         } catch (IOException e) {
@@ -34,7 +33,7 @@ public class Enemy {
     public void move() {
         if (state.equals("movingDown")) {
             y += speed;
-            if (y >= 150) { // Posisi berhenti untuk menembak
+            if (y >= 150) {
                 state = "shooting";
             }
         } else if (state.equals("shooting")) {
