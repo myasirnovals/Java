@@ -5,6 +5,7 @@ import model.BossBullet;
 import model.Bullet;
 import model.Player;
 import util.GameState;
+import util.SoundPlayer;
 
 import java.awt.*;
 import java.util.List;
@@ -35,6 +36,8 @@ public class BossManager {
             if (boss.getBounds().intersects(bullet.getBounds())) {
                 // TODO 3: menambahkan efek ledakan saat peluru mengenai boss
                 if(explosionManager != null){
+                    // TODO 6: menambahkan suara ledakan saat peluru mengenai bos
+                    SoundPlayer.playSound("assets/SoundTrack/explosive.wav");
                     explosionManager.addExplosion(bullet.getX(), bullet.getY());
                 }
 
@@ -50,6 +53,8 @@ public class BossManager {
             if (bossBullet.getBounds().intersects(player.getBounds())) {
                 // TODO 4: menambahkan efek ledakan saat peluru boss mengenai pemain
                 if(explosionManager != null){
+                    // TODO 7: menambahkan suara ledakan saat peluru boss mengenai pemain
+                    SoundPlayer.playSound("assets/SoundTrack/explosive.wav");
                     explosionManager.addExplosion(player.getX() + player.getWidth()/2, player.getY() + player.getHeight()/2);
                 }
 
@@ -77,6 +82,8 @@ public class BossManager {
                 }
 
                 //Tambahkan ledakan besar di tengah boss
+                // TODO 8: menambahkan suara ledakan besar saat boss dikalahkan
+                SoundPlayer.playSound("assets/SoundTrack/boss_explosive.wav");
                 explosionManager.addBossExplosion(boss.getX() + boss.getWidth()/2 -100, boss.getY() + boss.getHeight()/2 -100, 200, 200);
             }
 

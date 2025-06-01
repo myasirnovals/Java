@@ -1,5 +1,7 @@
 package model;
 
+import util.SoundPlayer;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
@@ -76,7 +78,6 @@ public class Boss {
             case 2:
                 // Peluru biasa
                 bullets.add(new BossBullet(x + width / 2 - 5, y + height, 0, 5));
-                break;
             case 4:
                 // Peluru menyebar
                 bullets.add(new BossBullet(x + width / 2 - 5, y + height, -3, 5));
@@ -102,6 +103,9 @@ public class Boss {
                 bullets.add(new BossBullet(x + width / 2 - 5, y + height, 0, 5));
                 break;
         }
+
+        // TODO 1: menambahkan suara tembakan boss
+        SoundPlayer.playSound("assets/SoundTrack/boss_shot.wav");
     }
 
     public List<BossBullet> getBullets() {

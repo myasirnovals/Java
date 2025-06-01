@@ -14,12 +14,14 @@ public class MainMenu extends JPanel implements ActionListener {
 
     private JButton playButton, instructionsButton, exitButton;
     private GameWindow gameWindow;
-    private Image background;
     private JLabel titleLabel;
     private Timer animationTimer;
+
     private float titleGlowIntensity = 0.0f;
     private boolean glowIncreasing = true;
     private boolean musicPlaying = false;
+
+    private static Image background;
 
     // warna dan font untuk elemen UI
     private final Color BUTTON_COLOR = new Color(30, 60, 120);
@@ -34,13 +36,16 @@ public class MainMenu extends JPanel implements ActionListener {
         setLayout(null);
 
         // TODO 4: Implementasi efek latar belakang
-        try{
-            background = ImageIO.read(new File("assets/Background/1747006402495.jpg"));
-            System.out.println("Background loaded Successfully");
-        } catch (IOException e) {
-            System.err.println("Error loading background image: " + e.getMessage());
-            e.printStackTrace();
+        if (background == null) {
+            try {
+                background = ImageIO.read(new File("assets/Background/1747006402495.jpg"));
+                System.out.println("Background loaded Successfully");
+            } catch (IOException e) {
+                System.err.println("Error loading background image: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
+
         // membuat judul dengan efek bayangan
         titleLabel = new JLabel("");
         titleLabel.setForeground(TITLE_COLOR);

@@ -3,6 +3,7 @@ package manager;
 import model.Bullet;
 import model.Enemy;
 import util.GameState;
+import util.SoundPlayer;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -53,7 +54,9 @@ public class BulletManager {
                 if (bullet.getBounds().intersects(enemy.getBounds())) {
                     // TODO 2: menambahkan efek ledakan saat peluru mengenai musuh
                     if (explosionManager != null) {
+                        // TODO 3: menambahkan suara ledakan saat peluru mengenai musuh
                         explosionManager.addExplosion(enemy.getX(), enemy.getY());
+                        SoundPlayer.playSound("assets/SoundTrack/explosive.wav");
                     }
 
                     enemyIterator.remove();

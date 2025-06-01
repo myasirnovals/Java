@@ -5,6 +5,7 @@ import model.ExplosionEffect;
 import ui.GameCanvas;
 import model.Enemy;
 import util.GameState;
+import util.SoundPlayer;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -59,7 +60,9 @@ public class EnemyManager {
             enemy.move();
 
             if (enemy.isShooting() && Math.random() < 0.02) { // Peluang menembak acak
+                // TODO 7: menambahkan suara peluru musuh
                 enemyBullets.add(new EnemyBullet(enemy.getX() + enemy.getWidth() / 2, enemy.getY() + enemy.getHeight()));
+                SoundPlayer.playSound("assets/SoundTrack/enemy_shot.wav");
             }
 
             if (enemy.getY() > canvasHeight) {
@@ -75,11 +78,14 @@ public class EnemyManager {
                     explosionManager.addExplosion(enemy.getX(), enemy.getY());
                 }
 
-                enemies.remove(i);
-                i--;
                 if (!shieldActive) {
                     gameState.decreaseLives();
                 }
+
+                // TODO 6: menambahkan suara ledakan saat terjadi tabrakan dengan pemain
+                SoundPlayer.playSound("assets/SoundTrack/explosive.wav");
+                enemies.remove(i);
+                i--;
                 gameState.setScore(gameState.getScore() + 10);
             }
         }
@@ -101,11 +107,14 @@ public class EnemyManager {
                     explosionManager.addExplosion(bullet.getX() - 25, bullet.getY() - 25);
                 }
 
-                enemyBullets.remove(i);
-                i--;
                 if (!shieldActive) {
                     gameState.decreaseLives();
                 }
+
+                // TODO 5: tambahakan suara ledakan saat peluru mengenai pemain
+                SoundPlayer.playSound("assets/SoundTrack/explosive.wav");
+                enemyBullets.remove(i);
+                i--;
             }
         }
     }

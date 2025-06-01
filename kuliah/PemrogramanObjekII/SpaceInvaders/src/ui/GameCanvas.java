@@ -27,11 +27,13 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
     private boolean rightPressed = false; // Tambahkan variabel untuk tracking tombol
     private boolean showLevelUpMessage = false; // Flag untuk menampilkan pesan level up
     private boolean gameOverMusicPlayed = false; // Flag untuk mengecek apakah musik game over sudah dimainkan
-    private Image background;
-    private Image heartImage;
     private GameWindow gameWindow;
     // TODO 1: menambahkan attribute explosionManager
     private ExplosionManager explosionManager;
+    private Timer winTimer;
+
+    private static Image heartImage;
+    private static Image background;
 
     private final GameState gameState;
     private final Player player;
@@ -61,16 +63,19 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         Image playerSprite = Toolkit.getDefaultToolkit().getImage("assets/Character/Ships/ship_0000.png");
         player = new Player(375, 500, 50, 50, 10, playerSprite);
 
-        try {
-            background = ImageIO.read(new File("assets/Background/1747005523800.jpg"));
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (background == null) {
+            try {
+                background = ImageIO.read(new File("assets/Background/1747005523800.jpg"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-
-        try {
-            heartImage = ImageIO.read(new File("assets/Skill/life_up.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (heartImage == null) {
+            try {
+                heartImage = ImageIO.read(new File("assets/Skill/life_up.png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         Thread gameThread = new Thread(this);
@@ -116,7 +121,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
                 lastLevelUpTime = currentTime;
             } else {
                 // Jika bukan level boss, cek apakah level masih di bawah 10
-                if (gameState.getLevel() < 10) {
+                if (gameState.getLevel() < 2) {
                     gameState.increaseLevel(); // Naikkan level jika masih di bawah 10
                     lastLevelUpTime = currentTime;
 
@@ -157,6 +162,17 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
                 SoundPlayer.stopBackgroundMusic();
                 SoundPlayer.playBackgroundMusicOnce("assets/SoundTrack/game_over.wav");
                 gameOverMusicPlayed = true;
+            }
+
+            // menambah pengecekan otomatis kembali ke menu utama jika menang
+            if ("You Won!".equals(gameState.getGameOverReason()) && winTimer == null) {
+                winTimer = new Timer(2000, e -> {
+                    gameWindow.showMainMenu();
+                    winTimer.stop();
+                    winTimer = null;
+                });
+                winTimer.setRepeats(false);
+                winTimer.start();
             }
             return;
         }
@@ -425,6 +441,11 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         gameOverMusicPlayed = false;
         SoundPlayer.stopBackgroundMusic();
         playGameBackgroundMusic();
+
+        if (winTimer != null) {
+            winTimer.stop();
+            winTimer = null;
+        }
     }
 
     @Override
