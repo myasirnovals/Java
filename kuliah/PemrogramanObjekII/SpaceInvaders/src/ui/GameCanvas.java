@@ -111,7 +111,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
                 bossManager.spawnBoss(getWidth(), gameState.getLevel());
                 lastLevelUpTime = currentTime;
             } else {
-                if (gameState.getLevel() < 2) {
+                if (gameState.getLevel() < 10) {
                     gameState.increaseLevel();
                     lastLevelUpTime = currentTime;
 
