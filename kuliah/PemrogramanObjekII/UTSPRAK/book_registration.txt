@@ -1,0 +1,18 @@
+=== DATA BUKU ===
+Judul Buku: A HIGHER CALL
+Penulis: Adam Makos, Larry Alexander
+Tanggal Terbit: 19/12/2012
+ISSN/ISBN: 978-0-425-25286-4
+Nomor Registrasi: HC2012WH
+Waktu Input: 2025-06-09T07:27:31.754664800
+==================
+
+=== DATA BUKU ===
+Judul Buku: Koisuru otome no tsukurikata
+Penulis: Soarasaki
+Tanggal Terbit: 12/12/2020
+ISSN/ISBN: 432-123-456-65
+Nomor Registrasi: MJ2020SM
+Waktu Input: 2025-06-09T07:59:13.667880700
+==================
+

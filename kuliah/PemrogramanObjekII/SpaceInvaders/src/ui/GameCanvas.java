@@ -111,7 +111,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
                 bossManager.spawnBoss(getWidth(), gameState.getLevel());
                 lastLevelUpTime = currentTime;
             } else {
-                if (gameState.getLevel() < 10) {
+                if (gameState.getLevel() < 2) {
                     gameState.increaseLevel();
                     lastLevelUpTime = currentTime;
 
@@ -122,7 +122,7 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
                     enemyManager.increaseSpawnRate(gameState.getLevel());
                 } else {
                     gameState.setGameOver(true);
-                    gameState.setGameOverReason("You Won!");
+                    gameState.setGameOverReason("YOU WON!!");
                 }
             }
         }
@@ -145,18 +145,12 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
         if (gameState.isGameOver()) {
             if (!gameOverMusicPlayed) {
                 SoundPlayer.stopBackgroundMusic();
-                SoundPlayer.playBackgroundMusicOnce("assets/SoundTrack/game_over.wav");
+                if ("YOU WON!!".equals(gameState.getGameOverReason())) {
+                    SoundPlayer.playBackgroundMusicOnce("assets/SoundTrack/win_game.wav");
+                } else {
+                    SoundPlayer.playBackgroundMusicOnce("assets/SoundTrack/game_over.wav");
+                }
                 gameOverMusicPlayed = true;
-            }
-
-            if ("You Won!".equals(gameState.getGameOverReason()) && winTimer == null) {
-                winTimer = new Timer(2000, e -> {
-                    gameWindow.showMainMenu();
-                    winTimer.stop();
-                    winTimer = null;
-                });
-                winTimer.setRepeats(false);
-                winTimer.start();
             }
             return;
         }
@@ -308,12 +302,21 @@ public class GameCanvas extends JPanel implements Runnable, KeyListener {
 
         if (gameState.isGameOver()) {
             Font gameOverFont = new Font("Arial", Font.BOLD, 40);
-            g2d.setFont(gameOverFont);
-            g2d.setColor(Color.RED);
-            String gameOverText = "GAME OVER";
-            fm = g2d.getFontMetrics();
-            int gameOverWidth = fm.stringWidth(gameOverText);
-            g2d.drawString(gameOverText, getWidth() / 2 - gameOverWidth / 2, getHeight() / 2 - 40);
+            if ("YOU WON!!".equals(gameState.getGameOverReason())) {
+                g2d.setFont(gameOverFont);
+                g2d.setColor(Color.GREEN);
+                String gameOverText = "VICTORY!";
+                fm = g2d.getFontMetrics();
+                int gameOverWidth = fm.stringWidth(gameOverText);
+                g2d.drawString(gameOverText, getWidth() / 2 - gameOverWidth / 2, getHeight() / 2 - 40);
+            } else {
+                g2d.setFont(gameOverFont);
+                g2d.setColor(Color.RED);
+                String gameOverText = "GAME OVER";
+                fm = g2d.getFontMetrics();
+                int gameOverWidth = fm.stringWidth(gameOverText);
+                g2d.drawString(gameOverText, getWidth() / 2 - gameOverWidth / 2, getHeight() / 2 - 40);
+            }
 
             Font reasonFont = new Font("Arial", Font.BOLD, 24);
             g2d.setFont(reasonFont);

@@ -38,7 +38,7 @@ public class GameState {
             level++;
         } else {
             setGameOver(true);
-            setGameOverReason("Maximum Level Reached");
+            setGameOverReason("YOU WON!!");
         }
     }
 
