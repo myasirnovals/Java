@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rancangan Game Space Invaders </title>
+    <style>
+        /* Pengaturan Dasar Halaman */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        h1, h2, h3 {
+            margin: 0;
+            padding: 0;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Kontainer Utama untuk setiap rancangan layar */
+        .wireframe-container {
+            border: 2px solid #888;
+            background-color: #fff;
+            padding: 20px;
+            width: 800px;
+            max-width: 95%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Gaya untuk Placeholder (Elemen visual seperti gambar atau canvas) */
+        .placeholder {
+            border: 2px solid #ccc;
+            background-color: #e9e9e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #aaa;
+            box-sizing: border-box;
+            height: 450px;
+        }
+
+        /* Gaya untuk Tombol */
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            border: 2px solid #555;
+            background-color: #ddd;
+            text-align: center;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Tata Letak Flexbox */
+        .flex-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* === GAYA MODAL/POP-UP YANG DIPERBARUI === */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(200, 200, 200, 0.7); /* Latar belakang semi-transparan */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px; /* Padding agar modal tidak menempel di tepi */
+        }
+
+        .modal-content {
+            background-color: #f9f9f9;
+            border: 2px solid #555;
+            padding: 20px;
+            width: 60%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .modal-header h3 {
+            text-align: left; /* Mengatur judul modal agar rata kiri */
+            width: auto;
+        }
+        .modal-header .close-x {
+            border: 1px solid #888;
+            width: 25px;
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end; /* Tombol rata kanan */
+            margin-top: 20px;
+        }
+        .modal-footer .btn {
+            width: 100px;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Jarak antara tombol Yes dan No */
+            margin-top: 20px;
+        }
+        .confirm-buttons .btn {
+            width: 120px;
+        }
+
+        /* --- Rancangan Spesifik --- */
+        #main-menu .title {
+            font-size: 48px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #555;
+            padding-bottom: 10px;
+        }
+        #main-menu .btn {
+            width: 200px;
+            margin: 10px 0;
+        }
+        #game-screen .header {
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        #game-screen .header span {
+            border: 1px solid #ddd;
+            padding: 2px 5px;
+        }
+        #game-screen .game-canvas {
+            height: 400px;
+            position: relative;
+        }
+        #game-screen .player { width: 40px; height: 20px; background-color: #bbb; position: absolute; bottom: 20px; left: calc(50% - 20px); border: 1px solid #888; }
+        #game-screen .enemy { width: 30px; height: 20px; background-color: #bbb; position: absolute; border: 1px solid #888; }
+
+    </style>
+</head>
+<body>
+
+<h1>Rancangan Kawat (Wireframe) - Space Invaders</h1>
+
+<!-- Rancangan 1: Menu Utama (Sama seperti sebelumnya) -->
+<div class="wireframe-container" id="main-menu">
+    <h2>Layar: Menu Utama</h2>
+    <div class="placeholder flex-center">
+        <div class="title">SPACE INVADERS</div>
+        <div class="btn">PLAY</div>
+        <div class="btn">INSTRUCTIONS</div>
+        <div class="btn">EXIT</div>
+    </div>
+</div>
+
+<!-- Rancangan 2: Layar Permainan (Sama seperti sebelumnya) -->
+<div class="wireframe-container" id="game-screen">
+    <!-- Konten layar permainan tidak berubah -->
+    <h2>Layar: Permainan Berlangsung</h2>
+    <div class="header flex-between">
+        <div><span>Score: 0</span> <span>Lives: ♥ ♥ ♥</span></div>
+        <div><span>Level: 1</span> <span>High Score: 0</span></div>
+        <div><span>Conquered: 0/100</span></div>
+    </div>
+    <div class="placeholder game-canvas">
+        <span>[ Area Canvas Permainan ]</span>
+        <div class="enemy" style="top: 20px; left: 30%;"></div> <div class="enemy" style="top: 20px; left: 50%;"></div> <div class="enemy" style="top: 20px; left: 70%;"></div>
+        <div class="player"></div>
+    </div>
+</div>
+
+<!-- === RANCANGAN 3: DIPERBAIKI === -->
+<div class="wireframe-container" id="instructions-modal-fixed">
+    <h2>Layar: Menu Utama dengan Modal Instruksi </h2>
+    <!-- Latar belakang menu utama (konten dari rancangan 1) -->
+    <div class="placeholder flex-center">
+        <div class="title">SPACE INVADERS</div>
+        <div class="btn">PLAY</div>
+        <div class="btn">INSTRUCTIONS</div>
+        <div class="btn">EXIT</div>
+    </div>
+    <!-- Lapisan Modal yang muncul di atasnya -->
+    <div class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>GAME INSTRUCTIONS</h3>
+                <div class="close-x">X</div>
+            </div>
+            <div>
+                <strong>CONTROLS</strong>
+                <ul><li>Arrow Keys: Move</li><li>Space: Fire</li><li>P: Pause</li></ul>
+                <strong>OBJECTIVES</strong>
+                <ul><li>Destroy enemy ships</li><li>Avoid projectiles</li></ul>
+            </div>
+            <div class="modal-footer">
+                <div class="btn">Close</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- === RANCANGAN 4: DIPERBAIKI === -->
+<div class="wireframe-container" id="confirm-exit-modal-fixed">
+    <h2>Layar: Menu Utama dengan Modal Konfirmasi </h2>
+    <!-- Latar belakang menu utama (konten dari rancangan 1) -->
+    <div class="placeholder flex-center">
+        <div class="title">SPACE INVADERS</div>
+        <div class="btn">PLAY</div>
+        <div class="btn">INSTRUCTIONS</div>
+        <div class="btn">EXIT</div>
+    </div>
+    <!-- Lapisan Modal yang muncul di atasnya -->
+    <div class="modal-overlay">
+        <div class="modal-content" style="text-align:center; max-width: 400px;">
+            <div class="modal-header">
+                <h3>Confirm Exit</h3>
+                <div class="close-x">X</div>
+            </div>
+            <p>Are you sure you want to exit?</p>
+            <div class="confirm-buttons">
+                <div class="btn">Yes</div>
+                <div class="btn">No</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Rancangan 5: Layar Game Over (berdasarkan image_1acec3.jpg) -->
+<div class="wireframe-container" id="game-over-overlay">
+    <h2>Layar: Permainan Berakhir (Game Over)</h2>
+    <div class="placeholder game-canvas">
+        <!-- Latar belakang permainan -->
+    </div>
+    <!-- Lapisan Game Over -->
+    <div class="modal-overlay">
+        <div class="modal-content">
+            <h2>GAME OVER</h2>
+            <p>No Lives Left</p>
+            <p>Final Score: 245</p>
+            <p>High Score: 245</p>
+            <div class="restart-info">
+                Press 'R' to Restart, 'ESC' to Exit
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

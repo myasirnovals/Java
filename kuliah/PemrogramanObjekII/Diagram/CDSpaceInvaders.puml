@@ -1,0 +1,194 @@
+@startuml
+!theme plain
+skinparam linetype ortho
+
+left to right direction
+
+' --- Main Entry Point ---
+class Main {
+  + {static} void main(String[] args)
+}
+
+' --- UI Package with Key Classes ---
+package "UI" {
+  class GameWindow {
+    - gameCanvas: GameCanvas
+    - mainMenu: MainMenu
+    + showGame()
+    +showMainMenu()
+  }
+
+  class MainMenu {
+    - gameWindow: GameWindow
+    - playButton: JButton
+    - exitButton: JButton
+    + actionPerformed(ActionEvent e)
+  }
+
+  class GameCanvas {
+    - gameState: GameState
+    - player: Player
+    - bulletManager: BulletManager
+    - enemyManager: EnemyManager
+    - powerUpManager: PowerUpManager
+    - bossManager: BossManager
+    - explosionManager: ExplosionManager
+    - gameWindow: GameWindow
+    + run()
+    + updateGame()
+    + paintComponent(Graphics g)
+    + keyPressed(KeyEvent e)
+    + resetGame()
+  }
+}
+
+' --- Managers Package with Key Classes ---
+package "Managers" {
+  class EnemyManager {
+    - enemies: ArrayList<Enemy>
+    - enemyBullets: ArrayList<EnemyBullet>
+    - explosionManager: ExplosionManager
+    - spawnInterval: int
+    + spawnEnemy(int)
+    + updateEnemies(Rectangle, boolean, GameState)
+  }
+
+  class BulletManager {
+    - bullets: ArrayList<Bullet>
+    - laserMode: boolean
+    - explosionManager: ExplosionManager
+    + addBullet(int, int)
+    + updateBullets(ArrayList<Enemy>, GameState)
+  }
+
+  class BossManager {
+    - boss: Boss
+    - bossBattle: boolean
+    - explosionManager: ExplosionManager
+    + spawnBoss(int, int)
+    + updateBoss(List<Bullet>, GameState, Player)
+    + checkBossDefeat(GameState)
+  }
+
+  class PowerUpManager {
+    - powerUps: ArrayList<PowerUp>
+    - spawnTimer: int
+    + spawnPowerUp(int)
+    + updatePowerUps(Rectangle, GameState, GameCanvas)
+  }
+
+  class ExplosionManager {
+    - explosions: ArrayList<ExplosionEffect>
+    + addExplosion(int, int)
+    + addBossExplosion(int, int)
+    + update()
+  }
+}
+
+' --- Models Package with Key Classes ---
+package "Models" {
+  class Player {
+    - x: int
+    - y: int
+    - speed: int
+    - sprite: Image
+    + moveLeft()
+    + moveRight(int)
+    + getBounds(): Rectangle
+  }
+
+  class Enemy {
+    - x: int
+    - y: int
+    - speed: int
+    - state: String
+    + move()
+    + isShooting(): boolean
+  }
+
+  class Boss {
+    - x: int
+    - y: int
+    - health: int
+    - bossLevel: int
+    - bullets: List<BossBullet>
+    + update(int)
+    + shoot()
+    + hit()
+    + isDead(): boolean
+  }
+
+  class Bullet {
+    - x: int
+    - y: int
+    - speed: int
+    + move()
+  }
+}
+
+' --- Utilities Package with Key Classes ---
+package "Utilities" {
+  class GameState {
+    - score: int
+    - lives: int
+    - level: int
+    - highScore: int
+    - gameOver: boolean
+    + decreaseLives()
+    + increaseLevel()
+    + setScore(int)
+  }
+
+  class SoundPlayer {
+    - {static} backgroundMusic: Clip
+    + {static} playSound(String)
+    + {static} playBackgroundMusic(String)
+    + {static} stopBackgroundMusic()
+  }
+}
+
+
+' --- CORE RELATIONSHIPS ---
+
+' Application Entry Point
+Main ..> GameWindow : creates
+
+' UI Structure
+GameWindow *-- GameCanvas
+GameWindow *-- MainMenu
+MainMenu ..> GameWindow : uses
+GameCanvas ..> GameWindow : uses
+
+' GameCanvas is the central orchestrator
+' It owns the player, the game state, and all managers
+GameCanvas *-- Player
+GameCanvas *-- GameState
+GameCanvas *-- EnemyManager
+GameCanvas *-- BulletManager
+GameCanvas *-- BossManager
+GameCanvas *-- PowerUpManager
+GameCanvas *-- ExplosionManager
+
+' Managers manage collections of Models
+EnemyManager o-- Enemy
+BulletManager o-- Bullet
+BossManager o-- Boss
+
+' Key dependencies between Managers
+' Many managers create explosions
+EnemyManager ..> ExplosionManager
+BulletManager ..> ExplosionManager
+BossManager ..> ExplosionManager
+
+' Dependencies on Utilities
+' Most managers and the canvas need to check/update the game state
+Managers ..> GameState
+' Sound is used widely
+Managers ..> SoundPlayer
+GameCanvas ..> SoundPlayer
+
+' Other critical dependencies
+BossManager ..> Player : for targeting
+PowerUpManager ..> GameCanvas : to apply effects
+
+@enduml
